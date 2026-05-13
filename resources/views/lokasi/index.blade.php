@@ -23,7 +23,7 @@
                 <div class="absolute inset-0 flex items-center justify-center opacity-20">
                     <span class="material-symbols-outlined text-6xl">map</span>
                 </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-surface to-transparent"></div>
                 <div class="absolute bottom-4 left-4 flex gap-2">
                     <span class="bg-surface text-on-surface text-xs font-sans font-bold px-2 py-1 rounded shadow-sm border border-outline-variant flex items-center gap-1">
                         <span class="material-symbols-outlined text-[14px]">radar</span>
@@ -72,7 +72,7 @@
 </div>
 
 <!-- Modal Tambah Lokasi -->
-<div id="modalTambahLokasi" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+<div id="modalTambahLokasi" class="hidden fixed inset-0 z-100 items-center justify-center p-4">
     <div class="absolute inset-0 bg-black/50" onclick="document.getElementById('modalTambahLokasi').classList.add('hidden')"></div>
     <div class="bg-surface rounded-2xl shadow-xl border border-outline-variant w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
         <div class="p-6 border-b border-outline-variant flex justify-between items-center">
@@ -97,17 +97,17 @@
                         <div>
                             <label for="latitude" class="block font-sans font-bold text-sm text-on-surface mb-1">Latitude</label>
                             <input id="latitude" name="latitude" type="number" step="any" required id="lat_input"
-                                   class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary bg-surface-container-highest" readonly>
+                                   class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" readonly>
                         </div>
                         <div>
                             <label for="longitude" class="block font-sans font-bold text-sm text-on-surface mb-1">Longitude</label>
                             <input id="longitude" name="longitude" type="number" step="any" required id="lng_input"
-                                   class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary bg-surface-container-highest" readonly>
+                                   class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" readonly>
                         </div>
                     </div>
 
                     <div>
-                        <label for="radius_km" class="block font-sans font-bold text-sm text-on-surface mb-1 flex justify-between">
+                        <label for="radius_km" class="font-sans font-bold text-sm text-on-surface mb-1 flex justify-between">
                             <span>Radius Peringatan (km)</span>
                             <span id="radius_val" class="text-primary font-bold">50 km</span>
                         </label>

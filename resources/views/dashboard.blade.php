@@ -13,11 +13,11 @@
     <!-- Overall Status Card -->
     <div class="md:col-span-2 bg-{{ $statusColor }} text-on-{{ str_replace('alert-', '', $statusColor) }} p-6 rounded-xl shadow-sm border border-outline-variant relative overflow-hidden flex flex-col justify-center">
         @if($statusArea === 'AMAN')
-            <div class="absolute right-[-20px] top-[-20px] opacity-20">
+            <div class="absolute -right-5 -top-5 opacity-20">
                 <span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
             </div>
         @else
-            <div class="absolute right-[-20px] top-[-20px] opacity-20">
+            <div class="absolute -right-5 -top-5 opacity-20">
                 <span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">warning</span>
             </div>
             <div class="absolute inset-0 bg-white/10 animate-pulse"></div>
@@ -67,7 +67,7 @@
             <span class="material-symbols-outlined text-primary">map</span>
             Peta Radius Pantauan
         </h2>
-        <div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm h-[400px] relative z-10" id="userMap">
+        <div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm h-100 relative z-10" id="userMap">
             <!-- Map container -->
         </div>
     </div>
