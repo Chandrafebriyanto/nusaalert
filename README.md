@@ -1,4 +1,4 @@
-# 🌋 SiWaspada — Sistem Peringatan Dini Bencana Alam Personal
+# 🌋 NusaAlert — Sistem Peringatan Dini Bencana Alam Personal
 ### Dokumentasi Project Pemrograman API — Laravel
 
 ---
@@ -13,13 +13,13 @@ Salah satu permasalahan kritis yang dihadapi masyarakat Indonesia adalah **keter
 
 Kasus Gempa Cianjur pada November 2022 (M5,6) yang menewaskan 335 orang dan Tsunami Selat Sunda pada Desember 2018 yang menewaskan 437 orang menjadi bukti nyata bahwa **gap antara data ilmiah yang dimiliki lembaga resmi dengan aksesibilitas informasi di tingkat masyarakat** masih sangat lebar.
 
-**SiWaspada** hadir sebagai solusi berbasis teknologi yang menjembatani data resmi bencana dari BMKG dengan kebutuhan masyarakat akan informasi yang cepat, akurat, dan personal. Dengan memanfaatkan Laravel sebagai backend API dan mengintegrasikan berbagai API publik resmi pemerintah, SiWaspada bertujuan untuk membangun ekosistem informasi kebencanaan yang inklusif, real-time, dan dapat diandalkan.
+**NusaAlert** hadir sebagai solusi berbasis teknologi yang menjembatani data resmi bencana dari BMKG dengan kebutuhan masyarakat akan informasi yang cepat, akurat, dan personal. Dengan memanfaatkan Laravel sebagai backend API dan mengintegrasikan berbagai API publik resmi pemerintah, NusaAlert bertujuan untuk membangun ekosistem informasi kebencanaan yang inklusif, real-time, dan dapat diandalkan.
 
 ---
 
 ## 2. RUMUSAN MASALAH
 
-Berdasarkan latar belakang yang telah diuraikan, rumusan masalah dalam project SiWaspada adalah sebagai berikut:
+Berdasarkan latar belakang yang telah diuraikan, rumusan masalah dalam project NusaAlert adalah sebagai berikut:
 
 1. **Bagaimana merancang sistem API berbasis Laravel** yang mampu mengintegrasikan data bencana real-time dari BMKG, OpenWeatherMap, dan Nominatim OpenStreetMap secara efisien?
 
@@ -98,7 +98,7 @@ Membangun platform API berbasis Laravel yang mengintegrasikan data bencana alam 
 - **Autentikasi:** OAuth2 (Admin Panel) + JWT
 
 #### e. Third-Party Developer (Integrasi Eksternal)
-- **Profil:** Pengembang aplikasi lain yang ingin mengintegrasikan data bencana SiWaspada
+- **Profil:** Pengembang aplikasi lain yang ingin mengintegrasikan data bencana NusaAlert
 - **Kebutuhan:** Mengambil data bencana melalui API untuk digunakan di platform lain
 - **Akses:** Endpoint data publik dengan rate limiting
 - **Autentikasi:** API Key (OAuth2 Client Credentials)
@@ -172,7 +172,7 @@ Membangun platform API berbasis Laravel yang mengintegrasikan data bencana alam 
 ### Struktur Informasi Sistem
 
 ```
-SiWaspada API System
+NusaAlert API System
 │
 ├── PUBLIC ENDPOINTS (No Auth Required)
 │   ├── GET /api/bencana                  → Daftar bencana terbaru
@@ -330,7 +330,7 @@ SiWaspada API System
 
 #### Alur 1: Pengguna Baru (Guest → Member)
 ```
-1. Pengguna mengakses siwaspada.id
+1. Pengguna mengakses nusaAlert.id
 2. Melihat dashboard publik (peta bencana aktif)
 3. Klik "Daftar Sekarang"
 4. Isi form registrasi (nama, email, password)
@@ -423,4 +423,4 @@ password_client, revoked, created_at, updated_at
 
 ---
 
-*Dokumen ini merupakan bagian dari project SiWaspada — Sistem Peringatan Dini Bencana Alam Personal berbasis Laravel API.*
+*Dokumen ini merupakan bagian dari project NusaAlert — Sistem Peringatan Dini Bencana Alam Personal berbasis Laravel API.*
