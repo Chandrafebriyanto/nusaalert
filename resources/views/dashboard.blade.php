@@ -30,7 +30,7 @@
                 @if($statusArea === 'AMAN')
                     Tidak ada ancaman signifikan di sekitar lokasi Anda saat ini.
                 @else
-                    Terdapat peringatan bencana di sekitar Anda. Segera periksa riwayat alert.
+                    Terdapat peringatan bencana di sekitar Anda. Segera periksa riwayat peringatan.
                 @endif
             </p>
         </div>

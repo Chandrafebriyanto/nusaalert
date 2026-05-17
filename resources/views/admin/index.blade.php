@@ -45,7 +45,7 @@
     <div class="bg-surface border border-outline-variant rounded-xl shadow-sm overflow-hidden">
         <div class="p-6 border-b border-outline-variant bg-surface-container flex items-center gap-3">
             <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">add_location_alt</span>
-            <h2 class="text-xl font-display font-bold text-on-surface">Tambah Bencana Manual</h2>
+            <h2 class="text-xl font-display font-bold text-on-surface">Peringatan Bencana</h2>
         </div>
 
         <form action="{{ route('admin.bencana.store') }}" method="POST" class="p-6">

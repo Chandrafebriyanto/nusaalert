@@ -34,7 +34,7 @@
            class="flex items-center gap-4 rounded-lg px-4 py-3 transition-all duration-200
                   {{ $currentRoute === 'alerts.index' ? 'bg-primary-container text-on-primary-container border-l-4 border-primary' : 'text-on-surface-variant hover:bg-surface-container-high hover:translate-x-1' }}">
             <span class="material-symbols-outlined" @if($currentRoute === 'alerts.index') style="font-variation-settings: 'FILL' 1;" @endif>history</span>
-            <span class="font-sans font-bold text-sm tracking-wide">Riwayat Laporan</span>
+            <span class="font-sans font-bold text-sm tracking-wide">Riwayat Peringatan</span>
             @php $unread = auth()->user()->unreadAlerts()->count(); @endphp
             @if($unread > 0)
                 <span class="ml-auto bg-error text-on-error text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{ $unread > 9 ? '9+' : $unread }}</span>

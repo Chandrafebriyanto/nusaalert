@@ -10,8 +10,7 @@ class AlertController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Alert::where('user_id', Auth::id())
-            ->with(['bencana', 'lokasi'])
+        $query = Alert::with(['bencana', 'lokasi'])
             ->orderBy('created_at', 'desc');
 
         // Filter by disaster type

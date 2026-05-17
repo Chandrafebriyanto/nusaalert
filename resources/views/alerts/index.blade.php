@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Riwayat Laporan')
+@section('title', 'Riwayat Peringatan')
 
 @section('content')
 <div class="flex justify-between items-end mb-6">
@@ -53,7 +53,7 @@
         <div class="divide-y divide-outline-variant">
             @foreach($alerts as $alert)
                 <div class="p-4 md:p-6 flex flex-col md:flex-row gap-6 hover:bg-surface-container-lowest transition-colors relative {{ $alert->status === 'sent' ? 'bg-primary-container/10' : '' }}">
-                    @if($alert->status === 'sent')
+                    @if($alert->status === 'sent' && $alert->user_id === auth()->id())
                         <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
                     @endif
                     
@@ -63,7 +63,7 @@
                             {{ $alert->status === 'sent' ? 'bg-primary text-on-primary' : 'bg-surface-container-highest text-on-surface-variant' }}">
                             @php
                                 $icon = 'warning';
-                                if($alert->bencana->jenis_bencana === 'gempa') $icon = 'seismograph'; // or similar icon
+                                if($alert->bencana->jenis_bencana === 'gempa') $icon = 'earthquake';
                                 if($alert->bencana->jenis_bencana === 'tsunami') $icon = 'tsunami';
                                 if($alert->bencana->jenis_bencana === 'cuaca_ekstrem') $icon = 'thunderstorm';
                                 if($alert->bencana->jenis_bencana === 'banjir') $icon = 'flood';
@@ -131,7 +131,7 @@
     @else
         <div class="p-12 text-center flex flex-col items-center justify-center">
             <span class="material-symbols-outlined text-6xl text-outline mb-4">history</span>
-            <h3 class="text-xl font-display font-bold text-on-surface mb-2">Tidak ada riwayat alert</h3>
+            <h3 class="text-xl font-display font-bold text-on-surface mb-2">Tidak ada riwayat peringatan</h3>
             <p class="font-sans text-on-surface-variant">Belum ada peringatan bencana yang masuk dalam radius lokasi Anda dengan filter saat ini.</p>
         </div>
     @endif

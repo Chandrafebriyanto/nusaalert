@@ -30,8 +30,7 @@ class PollBmkgCommand extends Command
         $alertCount = 0;
 
         foreach ($gempaBaruList as $gempa) {
-            // BMKG event id from Datetime (simulated, as BMKG API doesn't always provide UUID for list)
-            // Example "DateTime": "2024-05-14T03:45:30+00:00"
+            // BMKG event id from Datetime
             $eventId = 'bmkg-' . md5($gempa['DateTime'] . $gempa['Coordinates']);
 
             // Cek apakah sudah ada di database

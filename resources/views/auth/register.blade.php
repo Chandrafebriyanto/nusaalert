@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts.auth')
 
 @section('title', 'Daftar')
 
@@ -6,18 +6,13 @@
 <div class="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface-container-low">
     <div class="max-w-md w-full space-y-8 bg-surface p-8 rounded-xl shadow-sm border border-outline-variant">
         <div>
-            <div class="mx-auto w-16 h-16 bg-primary rounded-xl flex items-center justify-center text-on-primary shadow-sm mb-6">
-                <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">person_add</span>
+            <div class="mx-auto w-16 h-16 flex items-center justify-center">
+                <h1 class="text-3xl md:text-[32px] font-display font-extrabold tracking-tight text-primary leading-none">NusaAlert</h1>
             </div>
             <h2 class="text-center text-3xl font-display font-extrabold text-on-surface tracking-tight">
                 Buat Akun Baru
             </h2>
-            <p class="mt-2 text-center text-sm text-on-surface-variant font-sans">
-                Atau
-                <a href="{{ route('login') }}" class="font-bold text-primary hover:text-primary-container transition-colors">
-                    masuk jika sudah punya akun
-                </a>
-            </p>
+            
         </div>
 
         @if($errors->any())
@@ -32,35 +27,35 @@
 
         <form class="mt-8 space-y-6" action="{{ route('register') }}" method="POST">
             @csrf
-            <div class="rounded-md shadow-sm space-y-4">
+            <div class="rounded-md space-y-4">
                 <div>
                     <label for="name" class="block font-sans font-bold text-sm text-on-surface mb-1">Nama Lengkap</label>
                     <input id="name" name="name" type="text" autocomplete="name" required value="{{ old('name') }}"
-                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors"
+                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors shadow-sm"
                            placeholder="Budi Santoso">
                 </div>
                 <div>
                     <label for="email" class="block font-sans font-bold text-sm text-on-surface mb-1">Email address</label>
                     <input id="email" name="email" type="email" autocomplete="email" required value="{{ old('email') }}"
-                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors"
+                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors shadow-sm"
                            placeholder="nama@email.com">
                 </div>
                 <div>
                     <label for="phone" class="block font-sans font-bold text-sm text-on-surface mb-1">Nomor Telepon (Opsional)</label>
                     <input id="phone" name="phone" type="text" autocomplete="tel" value="{{ old('phone') }}"
-                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors"
+                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors shadow-sm"
                            placeholder="081234567890">
                 </div>
                 <div>
                     <label for="password" class="block font-sans font-bold text-sm text-on-surface mb-1">Password</label>
                     <input id="password" name="password" type="password" autocomplete="new-password" required
-                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors"
+                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors shadow-sm"
                            placeholder="Minimal 8 karakter">
                 </div>
                 <div>
                     <label for="password_confirmation" class="block font-sans font-bold text-sm text-on-surface mb-1">Konfirmasi Password</label>
                     <input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required
-                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors"
+                           class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-surface transition-colors shadow-sm"
                            placeholder="Ulangi password">
                 </div>
             </div>
@@ -72,6 +67,12 @@
                 </button>
             </div>
         </form>
+        <div class="text-center">
+            Sudah punya akun?
+            <a href="{{ route('login') }}" class="font-medium text-center text-on-surface hover:text-primary transition-colors">
+                <span class="underline">Masuk di sini</span>
+            </a>
+        </div>
     </div>
 </div>
 @endsection

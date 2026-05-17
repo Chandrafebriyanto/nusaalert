@@ -41,7 +41,7 @@
                 © {{ date('Y') }} NusaAlert. Data real-time bersumber dari BMKG & BNPB.
             </p>
         </div>
-        <div class="grid grid-cols-2 gap-4 md:justify-end">
+        {{-- <div class="grid grid-cols-2 gap-4 md:justify-end">
             <div class="flex flex-col gap-3">
                 <h4 class="font-sans font-bold text-sm text-on-surface mb-2 tracking-wide">Layanan</h4>
                 <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ route('panduan-keselamatan') }}">Panduan Keselamatan</a>
@@ -54,7 +54,7 @@
                 <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Syarat Ketentuan</a>
                 <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="#">API Developer</a>
             </div>
-        </div>
+        </div> --}}
     </div>
 </footer>
 @endsection
