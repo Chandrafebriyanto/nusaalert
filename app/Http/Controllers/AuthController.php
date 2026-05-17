@@ -17,6 +17,9 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -25,7 +28,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            if (Auth::user()->hasRole('admin')) {
+            if ($user->hasRole('admin')) {
                 return redirect()->intended(route('admin.index'));
             }
 

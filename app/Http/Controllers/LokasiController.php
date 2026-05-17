@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Gate;
 
 class LokasiController extends Controller
 {
-    /** @var \App\Models\User $user */
     public function index()
     {
-        $lokasi = Auth::user()->lokasi()->orderBy('created_at', 'desc')->get();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        
+        $lokasi = $user->lokasi()->orderBy('created_at', 'desc')->get();
         return view('lokasi.index', compact('lokasi'));
     }
 
@@ -26,7 +28,10 @@ class LokasiController extends Controller
             'radius_km' => 'required|integer|min:1|max:500',
         ]);
 
-        Auth::user()->lokasi()->create($request->only([
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        
+        $user->lokasi()->create($request->only([
             'nama_lokasi', 'latitude', 'longitude', 'radius_km'
         ]));
 
