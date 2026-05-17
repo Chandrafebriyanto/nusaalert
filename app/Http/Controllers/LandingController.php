@@ -23,4 +23,34 @@ class LandingController extends Controller
 
         return view('landing', compact('gempaTerkini', 'bencanaHariIni', 'totalBencana', 'bencanaAktif'));
     }
+
+    public function learnSystem()
+    {
+        return view('learn-system');
+    }
+
+    public function fullMap()
+    {
+        $bencanaAktif = Bencana::where('terjadi_pada', '>=', now()->subDays(30))
+            ->orderBy('terjadi_pada', 'desc')
+            ->limit(100)
+            ->get();
+
+        return view('peta', compact('bencanaAktif'));
+    }
+
+    public function panduanKeselamatan()
+    {
+        return view('pages.panduan-keselamatan');
+    }
+
+    public function kebijakanPrivasi()
+    {
+        return view('pages.kebijakan-privasi');
+    }
+
+    public function kontakDarurat()
+    {
+        return view('pages.kontak-darurat');
+    }
 }

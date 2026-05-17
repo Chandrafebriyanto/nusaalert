@@ -11,6 +11,11 @@ use App\Http\Controllers\AdminController;
 
 // Public Routes
 Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/pelajari-sistem', [LandingController::class, 'learnSystem'])->name('learn-system');
+Route::get('/peta', [LandingController::class, 'fullMap'])->name('peta');
+Route::get('/panduan-keselamatan', [LandingController::class, 'panduanKeselamatan'])->name('panduan-keselamatan');
+Route::get('/kebijakan-privasi', [LandingController::class, 'kebijakanPrivasi'])->name('kebijakan-privasi');
+Route::get('/kontak-darurat', [LandingController::class, 'kontakDarurat'])->name('kontak-darurat');
 
 // Auth Routes (Guest only)
 Route::middleware('guest')->group(function () {
@@ -41,6 +46,10 @@ Route::middleware('auth')->group(function () {
     // Laporan Komunitas
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+
+    // User Alert API (for notification polling)
+    Route::get('/api/user/check-proximity', [DashboardController::class, 'checkProximity'])->name('user.check-proximity');
+    Route::get('/api/user/alerts', [AlertController::class, 'latestAlerts'])->name('user.alerts');
 });
 
 // Admin Routes
@@ -49,4 +58,5 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::patch('/laporan/{laporan}/verify', [AdminController::class, 'verifyLaporan'])->name('admin.laporan.verify');
     Route::delete('/laporan/{laporan}/reject', [AdminController::class, 'rejectLaporan'])->name('admin.laporan.reject');
     Route::patch('/users/{user}/role', [AdminController::class, 'updateRole'])->name('admin.users.role');
+    Route::post('/bencana', [AdminController::class, 'storeBencana'])->name('admin.bencana.store');
 });

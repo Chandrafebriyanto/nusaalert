@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Bencana;
 use App\Models\Lokasi;
 use App\Models\Alert;
+use App\Jobs\SendDisasterAlertJob;
 use App\Services\BmkgService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -48,7 +49,7 @@ class PollBmkgCommand extends Command
                 'event_id' => $eventId,
                 'jenis_bencana' => 'gempa',
                 'magnitude' => (float) $gempa['Magnitude'],
-                'kedalaman_km' => (float) preg_replace('/[^0-9.]/', '', $gempa['Kedalaman']),
+                'kedalaman_km' => (float) preg_replace('/[^0-9.\-]/', '', $gempa['Kedalaman']),
                 'latitude' => $lat,
                 'longitude' => $lng,
                 'wilayah' => $gempa['Wilayah'],
@@ -69,7 +70,7 @@ class PollBmkgCommand extends Command
 
                 // Jika jarak gempa masuk dalam radius lokasi user
                 if ($jarak <= $lokasi->radius_km) {
-                    Alert::create([
+                    $alert = Alert::create([
                         'user_id' => $lokasi->user_id,
                         'bencana_id' => $bencana->id,
                         'lokasi_id' => $lokasi->id,
@@ -78,7 +79,9 @@ class PollBmkgCommand extends Command
                         'sent_at' => now(),
                     ]);
                     $alertCount++;
-                    // TODO: Kirim notifikasi via Email/Web Push disini jika diperlukan
+
+                    // Dispatch notification via queue
+                    SendDisasterAlertJob::dispatch($alert);
                 }
             }
         }

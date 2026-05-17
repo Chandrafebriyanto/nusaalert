@@ -69,10 +69,13 @@
             <p class="text-base text-on-surface">© {{ date('Y') }} NusaAlert. Data real-time bersumber dari BMKG & BNPB.</p>
         </div>
         <div class="flex flex-wrap md:justify-end gap-x-6 gap-y-2">
-            <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Panduan Keselamatan</a>
-            <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Kebijakan Privasi</a>
-            <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Kontak Darurat</a>
+            <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ route('panduan-keselamatan') }}">Panduan Keselamatan</a>
+            <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ route('kebijakan-privasi') }}">Kebijakan Privasi</a>
+            <a class="font-sans font-bold text-sm text-on-surface-variant hover:text-primary transition-colors" href="{{ route('kontak-darurat') }}">Kontak Darurat</a>
         </div>
     </footer>
 </main>
+
+{{-- Notification Popup System --}}
+@include('components.notification-popup')
 @endsection

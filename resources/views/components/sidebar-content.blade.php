@@ -4,14 +4,10 @@
 {{-- Sidebar Content (shared between mobile and desktop) --}}
 <div class="flex flex-col gap-8 h-full">
     {{-- Header --}}
-    <div class="flex items-center gap-3 px-2 pt-2">
-        <div class="w-11 h-11 bg-primary rounded-lg flex items-center justify-center text-on-primary shadow-sm">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shield</span>
-        </div>
-        <div class="flex flex-col">
-            <span class="font-display text-xl font-extrabold text-primary">NusaAlert</span>
-            <span class="text-xs text-on-surface-variant">Vigilant & Responsive</span>
-        </div>
+    <div class="px-2 pt-2">
+        <a href="{{ route('landing') }}" class="text-3xl font-display font-extrabold tracking-tight text-primary leading-none">
+            NusaAlert
+        </a>
     </div>
 
     {{-- Navigation --}}

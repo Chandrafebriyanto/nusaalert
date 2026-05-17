@@ -20,7 +20,7 @@ class BmkgService
      */
     public function getGempaTerkini(): ?array
     {
-        return Cache::remember('bmkg_gempa_terkini', 300, function () {
+        return Cache::remember('bmkg_gempa_terkini', 120, function () {
             try {
                 $response = Http::timeout(10)->get($this->baseUrl . '/autogempa.json');
                 if ($response->successful()) {
@@ -39,7 +39,7 @@ class BmkgService
      */
     public function getGempaM5(): array
     {
-        return Cache::remember('bmkg_gempa_m5', 300, function () {
+        return Cache::remember('bmkg_gempa_m5', 120, function () {
             try {
                 $response = Http::timeout(10)->get($this->baseUrl . '/gempaterkini.json');
                 if ($response->successful()) {
@@ -58,7 +58,7 @@ class BmkgService
      */
     public function getGempaDirasakan(): array
     {
-        return Cache::remember('bmkg_gempa_dirasakan', 300, function () {
+        return Cache::remember('bmkg_gempa_dirasakan', 120, function () {
             try {
                 $response = Http::timeout(10)->get($this->baseUrl . '/gempadirasakan.json');
                 if ($response->successful()) {
@@ -73,12 +73,21 @@ class BmkgService
     }
 
     /**
-     * Parse BMKG coordinate format (e.g., "2.95 LS" to -2.95)
+     * Parse BMKG coordinate format.
+     * Handles both text format ("2.95 LS") and direct numeric format ("-2.95").
      */
     public static function parseLatitude(string $lat): float
     {
-        $value = (float) preg_replace('/[^0-9.]/', '', $lat);
-        if (str_contains(strtoupper($lat), 'LS')) {
+        $lat = trim($lat);
+
+        // If already a clean numeric value (possibly negative), use directly
+        if (is_numeric($lat)) {
+            return (float) $lat;
+        }
+
+        // BMKG text format: strip everything except digits, dots, and minus
+        $value = (float) preg_replace('/[^0-9.\-]/', '', $lat);
+        if (str_contains(strtoupper($lat), 'LS') && $value > 0) {
             $value = -$value;
         }
         return $value;
@@ -86,8 +95,16 @@ class BmkgService
 
     public static function parseLongitude(string $lon): float
     {
-        $value = (float) preg_replace('/[^0-9.]/', '', $lon);
-        if (str_contains(strtoupper($lon), 'BB')) {
+        $lon = trim($lon);
+
+        // If already a clean numeric value, use directly
+        if (is_numeric($lon)) {
+            return (float) $lon;
+        }
+
+        // BMKG text format: strip everything except digits, dots, and minus
+        $value = (float) preg_replace('/[^0-9.\-]/', '', $lon);
+        if (str_contains(strtoupper($lon), 'BB') && $value > 0) {
             $value = -$value;
         }
         return $value;

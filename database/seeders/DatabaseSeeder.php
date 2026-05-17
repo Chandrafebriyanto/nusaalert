@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Alert;
+use App\Models\Bencana;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -59,38 +61,37 @@ class DatabaseSeeder extends Seeder
         $member->assignRole('member');
 
         // Create demo lokasi for member
-        $member->lokasi()->createMany([
-            [
-                'nama_lokasi' => 'Rumah Utama',
-                'latitude' => -6.2088,
-                'longitude' => 106.8456,
-                'radius_km' => 50,
-                'is_active' => true,
-            ],
-            [
-                'nama_lokasi' => 'Kantor Sudirman',
-                'latitude' => -6.2250,
-                'longitude' => 106.8100,
-                'radius_km' => 25,
-                'is_active' => false,
-            ],
+        $lokasiRumah = $member->lokasi()->create([
+            'nama_lokasi' => 'Rumah Utama',
+            'latitude' => -6.2088,
+            'longitude' => 106.8456,
+            'radius_km' => 50,
+            'is_active' => true,
         ]);
 
-        // Create some demo bencana data
-        \App\Models\Bencana::create([
+        $lokasiKantor = $member->lokasi()->create([
+            'nama_lokasi' => 'Kantor Sudirman',
+            'latitude' => -6.2250,
+            'longitude' => 106.8100,
+            'radius_km' => 25,
+            'is_active' => true,
+        ]);
+
+        // Create demo bencana data
+        $bencana1 = Bencana::create([
             'event_id' => 'bmkg-demo-001',
             'jenis_bencana' => 'gempa',
             'magnitude' => 5.2,
             'kedalaman_km' => 10,
-            'latitude' => -7.4956,
-            'longitude' => 109.1275,
-            'wilayah' => 'Barat Daya KAB-PANGANDARAN-JABAR',
+            'latitude' => -6.3500,
+            'longitude' => 106.9000,
+            'wilayah' => 'Selatan Bekasi, Jawa Barat',
             'sumber_api' => 'bmkg',
             'raw_data' => ['source' => 'demo'],
             'terjadi_pada' => now()->subHours(2),
         ]);
 
-        \App\Models\Bencana::create([
+        $bencana2 = Bencana::create([
             'event_id' => 'bmkg-demo-002',
             'jenis_bencana' => 'gempa',
             'magnitude' => 6.8,
@@ -103,7 +104,7 @@ class DatabaseSeeder extends Seeder
             'terjadi_pada' => now()->subHours(5),
         ]);
 
-        \App\Models\Bencana::create([
+        $bencana3 = Bencana::create([
             'event_id' => 'bmkg-demo-003',
             'jenis_bencana' => 'banjir',
             'magnitude' => null,
@@ -114,6 +115,86 @@ class DatabaseSeeder extends Seeder
             'sumber_api' => 'komunitas',
             'raw_data' => ['source' => 'demo'],
             'terjadi_pada' => now()->subHours(1),
+        ]);
+
+        $bencana4 = Bencana::create([
+            'event_id' => 'bmkg-demo-004',
+            'jenis_bencana' => 'gempa',
+            'magnitude' => 3.8,
+            'kedalaman_km' => 15,
+            'latitude' => -6.2500,
+            'longitude' => 106.7800,
+            'wilayah' => 'Tangerang Selatan, Banten',
+            'sumber_api' => 'bmkg',
+            'raw_data' => ['source' => 'demo'],
+            'terjadi_pada' => now()->subDays(1),
+        ]);
+
+        $bencana5 = Bencana::create([
+            'event_id' => 'bmkg-demo-005',
+            'jenis_bencana' => 'cuaca_ekstrem',
+            'magnitude' => null,
+            'kedalaman_km' => null,
+            'latitude' => -6.1300,
+            'longitude' => 106.9200,
+            'wilayah' => 'Jakarta Timur',
+            'sumber_api' => 'bmkg',
+            'raw_data' => ['source' => 'demo'],
+            'terjadi_pada' => now()->subDays(2),
+        ]);
+
+        // Create demo alert records (#5 - Riwayat Peringatan dummy data)
+        // Alert 1: Gempa M5.2 near Rumah (within 50km) - unread
+        Alert::create([
+            'user_id' => $member->id,
+            'bencana_id' => $bencana1->id,
+            'lokasi_id' => $lokasiRumah->id,
+            'jarak_km' => 16.5,
+            'status' => 'sent',
+            'sent_at' => now()->subHours(2),
+        ]);
+
+        // Alert 2: Banjir near Rumah - unread
+        Alert::create([
+            'user_id' => $member->id,
+            'bencana_id' => $bencana3->id,
+            'lokasi_id' => $lokasiRumah->id,
+            'jarak_km' => 4.2,
+            'status' => 'sent',
+            'sent_at' => now()->subHour(),
+        ]);
+
+        // Alert 3: Gempa M3.8 near Kantor - read
+        Alert::create([
+            'user_id' => $member->id,
+            'bencana_id' => $bencana4->id,
+            'lokasi_id' => $lokasiKantor->id,
+            'jarak_km' => 8.7,
+            'status' => 'read',
+            'sent_at' => now()->subDays(1),
+            'read_at' => now()->subDays(1)->addMinutes(15),
+        ]);
+
+        // Alert 4: Cuaca ekstrem near Rumah - read
+        Alert::create([
+            'user_id' => $member->id,
+            'bencana_id' => $bencana5->id,
+            'lokasi_id' => $lokasiRumah->id,
+            'jarak_km' => 12.3,
+            'status' => 'read',
+            'sent_at' => now()->subDays(2),
+            'read_at' => now()->subDays(2)->addMinutes(30),
+        ]);
+
+        // Alert 5: Gempa M5.2 near Kantor too - dismissed
+        Alert::create([
+            'user_id' => $member->id,
+            'bencana_id' => $bencana1->id,
+            'lokasi_id' => $lokasiKantor->id,
+            'jarak_km' => 18.2,
+            'status' => 'dismissed',
+            'sent_at' => now()->subHours(2),
+            'read_at' => now()->subHours(1),
         ]);
     }
 }

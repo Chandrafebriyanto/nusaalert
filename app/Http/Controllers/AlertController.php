@@ -56,4 +56,31 @@ class AlertController extends Controller
 
         return redirect()->back()->with('success', 'Semua alert ditandai telah dibaca.');
     }
+
+    /**
+     * AJAX endpoint: return latest unread alerts for notification popup
+     */
+    public function latestAlerts()
+    {
+        $alerts = Alert::where('user_id', Auth::id())
+            ->where('status', 'sent')
+            ->with(['bencana', 'lokasi'])
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get()
+            ->map(fn($a) => [
+                'id' => $a->id,
+                'jenis' => $a->bencana->jenis_bencana ?? 'unknown',
+                'wilayah' => $a->bencana->wilayah ?? '',
+                'magnitude' => $a->bencana->magnitude,
+                'jarak_km' => $a->jarak_km,
+                'lokasi_nama' => $a->lokasi->nama_lokasi ?? '',
+                'created_at' => $a->created_at->diffForHumans(),
+            ]);
+
+        return response()->json([
+            'alerts' => $alerts,
+            'count' => $alerts->count(),
+        ]);
+    }
 }

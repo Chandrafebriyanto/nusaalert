@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Lokasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+
 
 class LokasiController extends Controller
 {
+    /** @var \App\Models\User $user */
     public function index()
     {
         $lokasi = Auth::user()->lokasi()->orderBy('created_at', 'desc')->get();
@@ -32,7 +35,7 @@ class LokasiController extends Controller
 
     public function update(Request $request, Lokasi $lokasi)
     {
-        $this->authorize('update', $lokasi);
+        abort_unless(Auth::id() === $lokasi->user_id, 403, 'Unauthorized');
 
         $request->validate([
             'nama_lokasi' => 'sometimes|string|max:255',
@@ -51,14 +54,14 @@ class LokasiController extends Controller
 
     public function toggleActive(Lokasi $lokasi)
     {
-        $this->authorize('update', $lokasi);
+        abort_unless(Auth::id() === $lokasi->user_id, 403, 'Unauthorized');
         $lokasi->update(['is_active' => !$lokasi->is_active]);
         return redirect()->route('lokasi.index')->with('success', 'Status lokasi diperbarui!');
     }
 
     public function destroy(Lokasi $lokasi)
     {
-        $this->authorize('delete', $lokasi);
+        abort_unless(Auth::id() === $lokasi->user_id, 403, 'Unauthorized');
         $lokasi->delete();
         return redirect()->route('lokasi.index')->with('success', 'Lokasi berhasil dihapus!');
     }

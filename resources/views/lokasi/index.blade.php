@@ -8,7 +8,7 @@
         <h1 class="text-3xl font-display font-extrabold text-on-surface mb-2">Kelola Lokasi Pantauan</h1>
         <p class="text-lg text-on-surface-variant font-sans">Atur titik lokasi dan radius personal untuk sistem peringatan dini Anda.</p>
     </div>
-    <button onclick="document.getElementById('modalTambahLokasi').classList.remove('hidden')" class="bg-primary text-on-primary font-sans font-bold px-4 py-2 rounded-lg shadow-sm hover:opacity-90 flex items-center gap-2">
+    <button onclick="openAddModal()" class="bg-primary text-on-primary font-sans font-bold px-4 py-2 rounded-lg shadow-sm hover:opacity-90 flex items-center gap-2">
         <span class="material-symbols-outlined">add_location</span>
         Tambah Lokasi
     </button>
@@ -43,12 +43,18 @@
                 </div>
                 
                 <div class="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
-                    <form action="{{ route('lokasi.toggle', $loc) }}" method="POST">
-                        @csrf @method('PATCH')
-                        <button type="submit" class="text-sm font-sans font-bold {{ $loc->is_active ? 'text-on-surface-variant' : 'text-tertiary' }} hover:underline">
-                            {{ $loc->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+                    <div class="flex items-center gap-3">
+                        <form action="{{ route('lokasi.toggle', $loc) }}" method="POST">
+                            @csrf @method('PATCH')
+                            <button type="submit" class="text-sm font-sans font-bold {{ $loc->is_active ? 'text-on-surface-variant' : 'text-tertiary' }} hover:underline">
+                                {{ $loc->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+                            </button>
+                        </form>
+                        <button onclick="openEditModal({{ json_encode($loc) }})" class="text-sm font-sans font-bold text-primary hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[16px]">edit</span>
+                            Edit
                         </button>
-                    </form>
+                    </div>
                     <form action="{{ route('lokasi.destroy', $loc) }}" method="POST" onsubmit="return confirm('Hapus lokasi ini?');">
                         @csrf @method('DELETE')
                         <button type="submit" class="text-sm font-sans font-bold text-error hover:underline flex items-center gap-1">
@@ -64,7 +70,7 @@
             <span class="material-symbols-outlined text-6xl text-outline mb-4">location_off</span>
             <h3 class="text-xl font-display font-bold text-on-surface mb-2">Belum ada lokasi</h3>
             <p class="font-sans text-on-surface-variant mb-6">Tambahkan lokasi tempat tinggal atau keluarga Anda untuk mulai menerima notifikasi peringatan dini.</p>
-            <button onclick="document.getElementById('modalTambahLokasi').classList.remove('hidden')" class="bg-primary text-on-primary font-sans font-bold px-6 py-3 rounded-lg shadow-sm hover:opacity-90">
+            <button onclick="openAddModal()" class="bg-primary text-on-primary font-sans font-bold px-6 py-3 rounded-lg shadow-sm hover:opacity-90">
                 Tambah Lokasi Pertama
             </button>
         </div>
@@ -73,11 +79,11 @@
 
 <!-- Modal Tambah Lokasi -->
 <div id="modalTambahLokasi" class="hidden fixed inset-0 z-100 items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/50" onclick="document.getElementById('modalTambahLokasi').classList.add('hidden')"></div>
+    <div class="absolute inset-0 bg-black/50" onclick="closeAddModal()"></div>
     <div class="bg-surface rounded-2xl shadow-xl border border-outline-variant w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
         <div class="p-6 border-b border-outline-variant flex justify-between items-center">
             <h2 class="text-2xl font-display font-bold text-on-surface">Tambah Titik Pantauan</h2>
-            <button onclick="document.getElementById('modalTambahLokasi').classList.add('hidden')" class="text-on-surface-variant hover:text-on-surface">
+            <button onclick="closeAddModal()" class="text-on-surface-variant hover:text-on-surface">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
@@ -88,31 +94,31 @@
                 <!-- Form Inputs -->
                 <div class="space-y-4">
                     <div>
-                        <label for="nama_lokasi" class="block font-sans font-bold text-sm text-on-surface mb-1">Nama Tempat</label>
-                        <input id="nama_lokasi" name="nama_lokasi" type="text" required placeholder="Cth: Rumah, Kantor, Sekolah Anak"
+                        <label for="add_nama_lokasi" class="block font-sans font-bold text-sm text-on-surface mb-1">Nama Tempat</label>
+                        <input id="add_nama_lokasi" name="nama_lokasi" type="text" required placeholder="Cth: Rumah, Kantor, Sekolah Anak"
                                class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary">
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="latitude" class="block font-sans font-bold text-sm text-on-surface mb-1">Latitude</label>
-                            <input id="latitude" name="latitude" type="number" step="any" required id="lat_input"
+                            <label for="add_latitude" class="block font-sans font-bold text-sm text-on-surface mb-1">Latitude</label>
+                            <input id="add_latitude" name="latitude" type="number" step="any" required
                                    class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" readonly>
                         </div>
                         <div>
-                            <label for="longitude" class="block font-sans font-bold text-sm text-on-surface mb-1">Longitude</label>
-                            <input id="longitude" name="longitude" type="number" step="any" required id="lng_input"
+                            <label for="add_longitude" class="block font-sans font-bold text-sm text-on-surface mb-1">Longitude</label>
+                            <input id="add_longitude" name="longitude" type="number" step="any" required
                                    class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" readonly>
                         </div>
                     </div>
 
                     <div>
-                        <label for="radius_km" class="font-sans font-bold text-sm text-on-surface mb-1 flex justify-between">
+                        <label for="add_radius_km" class="font-sans font-bold text-sm text-on-surface mb-1 flex justify-between">
                             <span>Radius Peringatan (km)</span>
-                            <span id="radius_val" class="text-primary font-bold">50 km</span>
+                            <span id="add_radius_val" class="text-primary font-bold">50 km</span>
                         </label>
-                        <input id="radius_km" name="radius_km" type="range" min="5" max="200" value="50" class="w-full mt-2" 
-                               oninput="document.getElementById('radius_val').innerText = this.value + ' km'; updateRadius(this.value)">
+                        <input id="add_radius_km" name="radius_km" type="range" min="5" max="200" value="50" class="w-full mt-2" 
+                               oninput="document.getElementById('add_radius_val').innerText = this.value + ' km'; updateAddRadius(this.value)">
                         <p class="text-xs text-on-surface-variant mt-1">Sistem akan memberi tahu jika ada bencana dalam radius ini.</p>
                     </div>
                 </div>
@@ -120,14 +126,76 @@
                 <!-- Map Selector -->
                 <div class="flex flex-col gap-2">
                     <label class="block font-sans font-bold text-sm text-on-surface">Pilih dari Peta</label>
-                    <div id="pickerMap" class="w-full h-64 rounded-lg border border-outline-variant relative z-10"></div>
+                    <div id="addPickerMap" class="w-full h-64 rounded-lg border border-outline-variant relative z-10"></div>
                     <p class="text-xs text-on-surface-variant">Klik pada peta atau geser pin untuk menentukan koordinat presisi.</p>
                 </div>
             </div>
             
             <div class="p-6 border-t border-outline-variant bg-surface-container flex justify-end gap-3 mt-auto">
-                <button type="button" onclick="document.getElementById('modalTambahLokasi').classList.add('hidden')" class="px-4 py-2 font-sans font-bold text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">Batal</button>
+                <button type="button" onclick="closeAddModal()" class="px-4 py-2 font-sans font-bold text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">Batal</button>
                 <button type="submit" class="px-6 py-2 font-sans font-bold text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg shadow-sm transition-colors">Simpan Lokasi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit Lokasi -->
+<div id="modalEditLokasi" class="hidden fixed inset-0 z-100 items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50" onclick="closeEditModal()"></div>
+    <div class="bg-surface rounded-2xl shadow-xl border border-outline-variant w-full max-w-2xl relative z-10 flex flex-col max-h-[90vh]">
+        <div class="p-6 border-b border-outline-variant flex justify-between items-center">
+            <h2 class="text-2xl font-display font-bold text-on-surface">Edit Lokasi Pantauan</h2>
+            <button onclick="closeEditModal()" class="text-on-surface-variant hover:text-on-surface">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <form id="editForm" method="POST" class="flex flex-col flex-1 overflow-hidden">
+            @csrf @method('PUT')
+            <div class="p-6 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Form Inputs -->
+                <div class="space-y-4">
+                    <div>
+                        <label for="edit_nama_lokasi" class="block font-sans font-bold text-sm text-on-surface mb-1">Nama Tempat</label>
+                        <input id="edit_nama_lokasi" name="nama_lokasi" type="text" required
+                               class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="edit_latitude" class="block font-sans font-bold text-sm text-on-surface mb-1">Latitude</label>
+                            <input id="edit_latitude" name="latitude" type="number" step="any" required
+                                   class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" readonly>
+                        </div>
+                        <div>
+                            <label for="edit_longitude" class="block font-sans font-bold text-sm text-on-surface mb-1">Longitude</label>
+                            <input id="edit_longitude" name="longitude" type="number" step="any" required
+                                   class="rounded-lg block w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" readonly>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="edit_radius_km" class="font-sans font-bold text-sm text-on-surface mb-1 flex justify-between">
+                            <span>Radius Peringatan (km)</span>
+                            <span id="edit_radius_val" class="text-primary font-bold">50 km</span>
+                        </label>
+                        <input id="edit_radius_km" name="radius_km" type="range" min="5" max="200" value="50" class="w-full mt-2"
+                               oninput="document.getElementById('edit_radius_val').innerText = this.value + ' km'; updateEditRadius(this.value)">
+                        <p class="text-xs text-on-surface-variant mt-1">Sistem akan memberi tahu jika ada bencana dalam radius ini.</p>
+                    </div>
+                </div>
+
+                <!-- Map Selector -->
+                <div class="flex flex-col gap-2">
+                    <label class="block font-sans font-bold text-sm text-on-surface">Ubah Posisi dari Peta</label>
+                    <div id="editPickerMap" class="w-full h-64 rounded-lg border border-outline-variant relative z-10"></div>
+                    <p class="text-xs text-on-surface-variant">Klik pada peta atau geser pin untuk mengubah koordinat.</p>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-outline-variant bg-surface-container flex justify-end gap-3 mt-auto">
+                <button type="button" onclick="closeEditModal()" class="px-4 py-2 font-sans font-bold text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors">Batal</button>
+                <button type="submit" class="px-6 py-2 font-sans font-bold text-on-primary bg-primary hover:bg-on-primary-fixed-variant rounded-lg shadow-sm transition-colors">Perbarui Lokasi</button>
             </div>
         </form>
     </div>
@@ -136,69 +204,139 @@
 
 @push('scripts')
 <script>
-    let pickerMap, marker, circle;
+    // ============ ADD MODAL ============
+    let addMap, addMarker, addCircle;
 
-    function initPickerMap() {
-        if (pickerMap) return; // already initialized
+    function openAddModal() {
+        document.getElementById('modalTambahLokasi').classList.remove('hidden');
+        setTimeout(initAddMap, 150);
+    }
 
-        const defaultLat = -2.5489;
-        const defaultLng = 118.0149;
+    function closeAddModal() {
+        document.getElementById('modalTambahLokasi').classList.add('hidden');
+    }
 
-        pickerMap = L.map('pickerMap').setView([defaultLat, defaultLng], 5);
+    function initAddMap() {
+        if (addMap) { addMap.invalidateSize(); return; }
 
+        addMap = L.map('addPickerMap').setView([-2.5489, 118.0149], 5);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OSM contributors'
-        }).addTo(pickerMap);
+        }).addTo(addMap);
 
-        // Try to get user's location
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                updateMarkerPosition(lat, lng);
-                pickerMap.setView([lat, lng], 10);
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                updateAddMarker(pos.coords.latitude, pos.coords.longitude);
+                addMap.setView([pos.coords.latitude, pos.coords.longitude], 10);
             });
         }
 
-        pickerMap.on('click', function(e) {
-            updateMarkerPosition(e.latlng.lat, e.latlng.lng);
+        addMap.on('click', function(e) {
+            updateAddMarker(e.latlng.lat, e.latlng.lng);
         });
     }
 
-    function updateMarkerPosition(lat, lng) {
-        document.getElementById('latitude').value = lat.toFixed(6);
-        document.getElementById('longitude').value = lng.toFixed(6);
+    function updateAddMarker(lat, lng) {
+        document.getElementById('add_latitude').value = lat.toFixed(6);
+        document.getElementById('add_longitude').value = lng.toFixed(6);
+        const radius = document.getElementById('add_radius_km').value * 1000;
 
-        const radius = document.getElementById('radius_km').value * 1000;
-
-        if (marker) {
-            marker.setLatLng([lat, lng]);
-            circle.setLatLng([lat, lng]);
+        if (addMarker) {
+            addMarker.setLatLng([lat, lng]);
+            addCircle.setLatLng([lat, lng]);
         } else {
-            marker = L.marker([lat, lng], {draggable: true}).addTo(pickerMap);
-            circle = L.circle([lat, lng], {
-                color: 'var(--color-primary)',
-                fillColor: 'var(--color-primary)',
-                fillOpacity: 0.2,
-                radius: radius
-            }).addTo(pickerMap);
-
-            marker.on('dragend', function(e) {
+            addMarker = L.marker([lat, lng], {draggable: true}).addTo(addMap);
+            addCircle = L.circle([lat, lng], {
+                color: '#b71422', fillColor: '#b71422', fillOpacity: 0.15, radius: radius
+            }).addTo(addMap);
+            addMarker.on('dragend', function(e) {
                 const pos = e.target.getLatLng();
-                updateMarkerPosition(pos.lat, pos.lng);
+                updateAddMarker(pos.lat, pos.lng);
             });
         }
     }
 
-    window.updateRadius = function(km) {
-        if(circle) {
-            circle.setRadius(km * 1000);
+    window.updateAddRadius = function(km) {
+        if (addCircle) addCircle.setRadius(km * 1000);
+    };
+
+    // ============ EDIT MODAL ============
+    let editMap, editMarker, editCircle;
+
+    function openEditModal(lokasi) {
+        const modal = document.getElementById('modalEditLokasi');
+        const form = document.getElementById('editForm');
+        
+        // Set form action
+        form.action = '/lokasi/' + lokasi.id;
+        
+        // Fill form fields
+        document.getElementById('edit_nama_lokasi').value = lokasi.nama_lokasi;
+        document.getElementById('edit_latitude').value = lokasi.latitude;
+        document.getElementById('edit_longitude').value = lokasi.longitude;
+        document.getElementById('edit_radius_km').value = lokasi.radius_km;
+        document.getElementById('edit_radius_val').innerText = lokasi.radius_km + ' km';
+        
+        modal.classList.remove('hidden');
+        
+        setTimeout(function() {
+            initEditMap(parseFloat(lokasi.latitude), parseFloat(lokasi.longitude), lokasi.radius_km);
+        }, 150);
+    }
+
+    function closeEditModal() {
+        document.getElementById('modalEditLokasi').classList.add('hidden');
+        // Reset edit map state for next open
+        if (editMap) {
+            editMap.remove();
+            editMap = null;
+            editMarker = null;
+            editCircle = null;
         }
     }
 
-    // Initialize map when modal is opened
-    document.querySelector('[onclick="document.getElementById(\'modalTambahLokasi\').classList.remove(\'hidden\')"]').addEventListener('click', () => {
-        setTimeout(initPickerMap, 100); // Wait for modal to render
-    });
+    function initEditMap(lat, lng, radius) {
+        if (editMap) {
+            editMap.remove();
+            editMarker = null;
+            editCircle = null;
+        }
+
+        editMap = L.map('editPickerMap').setView([lat, lng], 10);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OSM contributors'
+        }).addTo(editMap);
+
+        updateEditMarker(lat, lng, radius * 1000);
+
+        editMap.on('click', function(e) {
+            updateEditMarker(e.latlng.lat, e.latlng.lng);
+        });
+    }
+
+    function updateEditMarker(lat, lng, radiusMeters) {
+        document.getElementById('edit_latitude').value = lat.toFixed(6);
+        document.getElementById('edit_longitude').value = lng.toFixed(6);
+        const radius = radiusMeters || document.getElementById('edit_radius_km').value * 1000;
+
+        if (editMarker) {
+            editMarker.setLatLng([lat, lng]);
+            editCircle.setLatLng([lat, lng]);
+            editCircle.setRadius(radius);
+        } else {
+            editMarker = L.marker([lat, lng], {draggable: true}).addTo(editMap);
+            editCircle = L.circle([lat, lng], {
+                color: '#b71422', fillColor: '#b71422', fillOpacity: 0.15, radius: radius
+            }).addTo(editMap);
+            editMarker.on('dragend', function(e) {
+                const pos = e.target.getLatLng();
+                updateEditMarker(pos.lat, pos.lng);
+            });
+        }
+    }
+
+    window.updateEditRadius = function(km) {
+        if (editCircle) editCircle.setRadius(km * 1000);
+    };
 </script>
 @endpush

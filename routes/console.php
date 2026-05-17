@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('app:poll-bmkg')->everyFiveMinutes();
+Schedule::command('app:poll-weather')->everyFifteenMinutes();

@@ -25,7 +25,7 @@
                     Daftar Sekarang
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
-                <a href="#fitur" class="bg-surface border-2 border-outline-variant text-on-surface font-sans font-bold text-lg px-8 py-4 rounded-lg hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
+                <a href="{{ route('learn-system') }}" class="bg-surface border-2 border-outline-variant text-on-surface font-sans font-bold text-lg px-8 py-4 rounded-lg hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
                     Pelajari Sistem
                 </a>
             </div>
@@ -120,7 +120,7 @@
                 <h2 class="text-3xl font-display font-bold text-on-surface mb-2">Peta Bencana Aktif</h2>
                 <p class="text-lg text-on-surface-variant font-sans max-w-2xl">Pantauan visual kejadian bencana dalam 30 hari terakhir. Silakan login untuk melihat fitur radius personal.</p>
             </div>
-            <a href="{{ route('login') }}" class="bg-surface border border-outline-variant text-on-surface font-sans font-bold text-sm px-6 py-3 rounded-lg hover:bg-surface-container-high transition-colors flex items-center gap-2">
+            <a href="{{ route('peta') }}" class="bg-surface border border-outline-variant text-on-surface font-sans font-bold text-sm px-6 py-3 rounded-lg hover:bg-surface-container-high transition-colors flex items-center gap-2">
                 <span class="material-symbols-outlined">map</span>
                 Buka Peta Penuh
             </a>
