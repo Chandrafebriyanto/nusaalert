@@ -105,7 +105,7 @@
 </section>
 
 <!-- FAQ Section -->
-<section class="w-full px-4 md:px-10 py-16 bg-surface-container-lowest">
+{{-- <section class="w-full px-4 md:px-10 py-16 bg-surface-container-lowest">
     <div class="max-w-3xl mx-auto">
         <h2 class="text-3xl font-display font-bold text-on-surface mb-8 text-center">Pertanyaan Umum</h2>
 
@@ -161,5 +161,5 @@
             </details>
         </div>
     </div>
-</section>
+</section> --}}
 @endsection

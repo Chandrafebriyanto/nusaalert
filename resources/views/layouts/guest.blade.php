@@ -9,7 +9,7 @@
         </a>
         <nav class="hidden md:flex gap-6 items-center">
             <a class="text-lg font-display font-semibold text-on-surface border-b-2 border-primary px-2 py-1" href="{{ route('landing') }}">Beranda</a>
-            <a class="text-lg font-display font-semibold text-on-surface-variant hover:text-primary px-2 py-1 transition-colors" href="#peta">Peta</a>
+            <a class="text-lg font-display font-semibold text-on-surface-variant hover:text-primary px-2 py-1 transition-colors" href={{route('peta')}}>Peta</a>
         </nav>
         <div class="flex items-center gap-3">
             @auth

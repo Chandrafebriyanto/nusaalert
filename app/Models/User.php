@@ -56,4 +56,12 @@ class User extends Authenticatable
     {
         return $this->alerts()->where('status', 'sent');
     }
+    public function JWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    public function JWTCustomClaims()
+    {
+        return [];
+    }
 }
