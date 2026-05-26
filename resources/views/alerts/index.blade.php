@@ -37,7 +37,7 @@
             <input type="date" name="tanggal" id="tanggal" value="{{ request('tanggal') }}" class="w-full bg-surface-container-highest border border-outline-variant rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none font-sans text-on-surface">
         </div>
         <div>
-            <button type="submit" class="bg-secondary text-on-secondary font-sans font-bold px-6 py-2 rounded-lg hover:bg-secondary-container hover:text-on-secondary-container transition-colors h-10.5">
+            <button type="submit" class="bg-primary text-on-primary font-sans font-bold px-6 py-2 rounded-lg hover:bg-secondary-container hover:text-on-secondary-container transition-colors h-10.5">
                 Filter
             </button>
             @if(request()->hasAny(['jenis', 'tanggal']))
