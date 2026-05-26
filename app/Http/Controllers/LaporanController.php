@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Laporan;
+use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LaporanController extends Controller
 {
-    public function index()
+    use ApiResponseTrait;
+
+    public function index(Request $request)
     {
         $laporanVerified = Laporan::where('status', '!=', 'pending')
             ->with('user')
@@ -21,6 +24,16 @@ class LaporanController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
+
+        if ($this->wantsJson($request)) {
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'verified' => $laporanVerified,
+                    'pending' => $laporanPending,
+                ],
+            ]);
+        }
 
         return view('laporan.index', compact('laporanVerified', 'laporanPending'));
     }
@@ -43,8 +56,8 @@ class LaporanController extends Controller
             $data['foto_url'] = $request->file('foto')->store('laporan', 'public');
         }
 
-        Laporan::create($data);
+        $laporan = Laporan::create($data);
 
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dikirim! Menunggu verifikasi.');
+        return $this->respondWithSuccessOrRedirect($request, 'laporan.index', 'Laporan berhasil dikirim! Menunggu verifikasi.', ['laporan' => $laporan], 201);
     }
 }

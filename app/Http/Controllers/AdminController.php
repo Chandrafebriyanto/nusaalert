@@ -9,14 +9,18 @@ use App\Models\Lokasi;
 use App\Models\User;
 use App\Jobs\SendDisasterAlertJob;
 use App\Services\BmkgService;
+use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
-    public function index()
+    use ApiResponseTrait;
+
+    public function index(Request $request)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -43,29 +47,38 @@ class AdminController extends Controller
 
         $roles = Role::all();
 
-        return view('admin.index', compact(
+        $data = compact(
             'totalUsers', 'totalBencana', 'totalAlerts', 'totalLaporan',
             'laporanPending', 'latestBencana', 'users', 'roles'
-        ));
+        );
+
+        if ($this->wantsJson($request)) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+            ]);
+        }
+
+        return view('admin.index', $data);
     }
 
-    public function verifyLaporan(Laporan $laporan)
+    public function verifyLaporan(Request $request, Laporan $laporan)
     {
         $laporan->update(['status' => 'verified']);
-        return redirect()->back()->with('success', 'Laporan berhasil diverifikasi.');
+        return $this->respondWithSuccessOrBack($request, 'Laporan berhasil diverifikasi.', ['laporan' => $laporan->fresh()]);
     }
 
-    public function rejectLaporan(Laporan $laporan)
+    public function rejectLaporan(Request $request, Laporan $laporan)
     {
         $laporan->delete();
-        return redirect()->back()->with('success', 'Laporan berhasil ditolak dan dihapus.');
+        return $this->respondWithSuccessOrBack($request, 'Laporan berhasil ditolak dan dihapus.');
     }
 
     public function updateRole(Request $request, User $user)
     {
         $request->validate(['role' => 'required|string|exists:roles,name']);
         $user->syncRoles([$request->role]);
-        return redirect()->back()->with('success', "Role user {$user->name} diperbarui ke {$request->role}.");
+        return $this->respondWithSuccessOrBack($request, "Role user {$user->name} diperbarui ke {$request->role}.", ['user' => $user->fresh()->load('roles')]);
     }
 
     /**
@@ -88,6 +101,7 @@ class AdminController extends Controller
         $eventId = 'manual-' . Str::uuid()->toString();
 
         $bencana = Bencana::create([
+            'user_id' => Auth::id(),
             'event_id' => $eventId,
             'jenis_bencana' => $request->jenis_bencana,
             'magnitude' => $request->magnitude,
@@ -130,7 +144,31 @@ class AdminController extends Controller
             }
         }
 
-        return redirect()->route('admin.index')
-            ->with('success', "Bencana berhasil ditambahkan ke peta. {$alertCount} alert otomatis dikirim ke pengguna terdekat.");
+        $message = "Bencana berhasil ditambahkan ke peta. {$alertCount} alert otomatis dikirim ke pengguna terdekat.";
+
+        return $this->respondWithSuccessOrRedirect($request, 'admin.index', $message, ['bencana' => $bencana, 'alert_count' => $alertCount], 201);
+    }
+
+    public function destroyLaporan(Request $request, Laporan $laporan)
+    {
+        if($laporan->foto_url){
+            Storage::disk('public')->delete($laporan->foto_url);
+        }
+
+        $laporan->delete();
+        return $this->respondWithSuccessOrBack($request, 'Laporan Komunitas berhasil dihapus.');
+    }
+
+    public function destroyBencana(Request $request, Bencana $bencana)
+    {
+        if($bencana->user_id !== Auth::id()){
+            if ($this->wantsJson($request)) {
+                return response()->json(['status' => 'error', 'message' => 'Unauthorized.'], 403);
+            }
+            abort(403, 'Anda tidak memiliki izin untuk menghapus data bencana ini.');
+        }
+
+        $bencana->delete();
+        return $this->respondWithSuccessOrBack($request, 'Data Bencana berhasil dihapus.');
     }
 }

@@ -1,0 +1,1 @@
+<?php require 'vendor/autoload.php'; use OpenApi\Analysers\ReflectionAnalyser; use OpenApi\Analysers\DocBlockAnnotationFactory; use OpenApi\Context; $a = new ReflectionAnalyser([new DocBlockAnnotationFactory()]); $c = new Context(); $res = $a->fromFile('app/Http/Controllers/Api/AuthApiController.php', $c); print_r($res);

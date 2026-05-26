@@ -157,20 +157,29 @@
         </div>
         <div class="divide-y divide-outline-variant max-h-96 overflow-y-auto">
             @forelse($latestBencana as $bencana)
-                <div class="p-4 flex items-start gap-3">
-                    <div class="w-10 h-10 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center text-sm font-bold shrink-0">
-                        {{ $bencana->magnitude ? 'M'.$bencana->magnitude : strtoupper(substr($bencana->jenis_bencana, 0, 2)) }}
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="font-display font-bold text-on-surface text-sm truncate">{{ strtoupper($bencana->jenis_bencana) }} — {{ $bencana->wilayah }}</p>
-                        <p class="text-xs text-on-surface-variant font-sans">{{ $bencana->terjadi_pada->diffForHumans() }} • {{ $bencana->sumber_api }}</p>
-                    </div>
-                </div>
-            @empty
-                <div class="p-8 text-center">
-                    <p class="font-sans text-on-surface-variant">Belum ada data bencana.</p>
-                </div>
-            @endforelse
+    <div class="p-4 flex items-start gap-3">
+        <div class="w-10 h-10 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center text-sm font-bold shrink-0">
+            {{ $bencana->magnitude ? 'M'.$bencana->magnitude : strtoupper(substr($bencana->jenis_bencana, 0, 2)) }}
+        </div>
+        <div class="min-w-0 flex-1">
+            <p class="font-display font-bold text-on-surface text-sm truncate">{{ strtoupper($bencana->jenis_bencana) }} — {{ $bencana->wilayah }}</p>
+            <p class="text-xs text-on-surface-variant font-sans">{{ $bencana->terjadi_pada->diffForHumans() }} • {{ $bencana->sumber_api }}</p>
+        </div>
+        
+        {{-- Tombol Hapus Bencana --}}
+        @if($bencana->sumber_api === 'manual_admin')
+            <form action="{{ route('admin.bencana.destroy', $bencana->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peringatan ini?')" class="shrink-0">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="bg-error text-on-error font-sans font-bold text-xs px-3 py-1.5 rounded-lg hover:opacity-90">Hapus</button>
+            </form>
+        @endif
+    </div>
+@empty
+    <div class="p-8 text-center">
+        <p class="font-sans text-on-surface-variant">Belum ada data bencana.</p>
+    </div>
+@endforelse
         </div>
     </div>
 

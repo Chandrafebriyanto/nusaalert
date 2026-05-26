@@ -1,0 +1,1819 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "NusaAlert API",
+        "description": "API dokumentasi untuk NusaAlert.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
+    "paths": {
+        "/api/v1/admin/dashboard": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Statistik dashboard admin",
+                "operationId": "801e40951e675fc46835d28c630c3a07",
+                "responses": {
+                    "200": {
+                        "description": "Data statistik admin",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Akses admin diperlukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/laporan/{id}/verify": {
+            "patch": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Verifikasi laporan komunitas",
+                "operationId": "7c109ac6ffa181813b07ca78841937b5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Laporan berhasil diverifikasi"
+                    },
+                    "403": {
+                        "description": "Akses admin diperlukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/laporan/{id}/reject": {
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Tolak dan hapus laporan komunitas",
+                "operationId": "f230911bc79e1fba9f5071f1b0bf54b1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Laporan berhasil ditolak"
+                    },
+                    "403": {
+                        "description": "Akses admin diperlukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/users/{id}/role": {
+            "patch": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Update role user",
+                "operationId": "31dfe3c5aebc71c1f7a33106a8c9ad33",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "role"
+                                ],
+                                "properties": {
+                                    "role": {
+                                        "type": "string",
+                                        "example": "member"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Role user berhasil diperbarui"
+                    },
+                    "403": {
+                        "description": "Akses admin diperlukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/bencana": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Tambah data bencana manual",
+                "operationId": "5e650fceda8493bc2627eb9fcebbdb11",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "jenis_bencana",
+                                    "latitude",
+                                    "longitude",
+                                    "wilayah"
+                                ],
+                                "properties": {
+                                    "jenis_bencana": {
+                                        "type": "string",
+                                        "enum": [
+                                            "gempa",
+                                            "tsunami",
+                                            "banjir",
+                                            "cuaca_ekstrem",
+                                            "gunung_api",
+                                            "tanah_longsor"
+                                        ]
+                                    },
+                                    "magnitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 5.2
+                                    },
+                                    "kedalaman_km": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": -6.2088
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 106.8456
+                                    },
+                                    "wilayah": {
+                                        "type": "string",
+                                        "example": "Jakarta Selatan"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string",
+                                        "example": "Gempa terasa kuat"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Bencana berhasil ditambahkan"
+                    },
+                    "403": {
+                        "description": "Akses admin diperlukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/bencana/{id}": {
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Hapus data bencana",
+                "operationId": "2b59e95a6bda6458b3410227b91fef57",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bencana berhasil dihapus"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/laporan/{id}": {
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Hapus laporan komunitas",
+                "operationId": "deb492c0cb6453485820fca619efa445",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Laporan berhasil dihapus"
+                    },
+                    "403": {
+                        "description": "Akses admin diperlukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/users": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Daftar semua user",
+                "operationId": "bb0ce6c803aec2e06a5a19aa0022bcd1",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar user berhasil diambil"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/alerts": {
+            "get": {
+                "tags": [
+                    "Alerts"
+                ],
+                "summary": "Daftar alert user",
+                "operationId": "3937475256ed06091ff188b4776dace9",
+                "parameters": [
+                    {
+                        "name": "jenis",
+                        "in": "query",
+                        "description": "Filter berdasarkan jenis bencana",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tanggal",
+                        "in": "query",
+                        "description": "Filter berdasarkan tanggal",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "sent",
+                                "read",
+                                "dismissed"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar alert berhasil diambil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/alerts/unread": {
+            "get": {
+                "tags": [
+                    "Alerts"
+                ],
+                "summary": "Daftar alert yang belum dibaca",
+                "operationId": "c4d292c8159d80874d291b6d3f62572f",
+                "responses": {
+                    "200": {
+                        "description": "Daftar alert unread"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/alerts/{id}/read": {
+            "patch": {
+                "tags": [
+                    "Alerts"
+                ],
+                "summary": "Tandai alert sebagai sudah dibaca",
+                "operationId": "8fbfb54a55293bf48e21b4c78c816296",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Alert ditandai dibaca"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/alerts/mark-all-read": {
+            "patch": {
+                "tags": [
+                    "Alerts"
+                ],
+                "summary": "Tandai semua alert sebagai sudah dibaca",
+                "operationId": "079b4d4886428e09d1dd879efa2ae0b5",
+                "responses": {
+                    "200": {
+                        "description": "Semua alert ditandai dibaca"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register user baru",
+                "operationId": "b18dbeab0d00ed1298c34f7f55f4343d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Budi Santoso"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "081234567890"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registrasi berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registrasi berhasil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer"
+                                                },
+                                                "api_key": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login dan dapatkan JWT token",
+                "operationId": "f2534d1e69ffbeff00144a7287b62bbe",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@nusaalert.id"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer"
+                                                },
+                                                "user": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Kredensial tidak valid"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout dan invalidate JWT token",
+                "operationId": "f8e3962a01e8f59df1ecadf28fb5752b",
+                "responses": {
+                    "200": {
+                        "description": "Logout berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Berhasil logout."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token tidak valid"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh JWT token",
+                "operationId": "d038f2fad4d3538f23df02894e69a17a",
+                "responses": {
+                    "200": {
+                        "description": "Token berhasil di-refresh",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token tidak valid"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get profil user yang sedang login",
+                "operationId": "92980d698287402f35ad2941fa543db0",
+                "responses": {
+                    "200": {
+                        "description": "Data profil user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/api-key/generate": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Generate atau regenerate API Key",
+                "operationId": "7b5d2d19136e4505fb2842c7c14c7cdf",
+                "responses": {
+                    "200": {
+                        "description": "API Key berhasil di-generate",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "api_key": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bencana": {
+            "get": {
+                "tags": [
+                    "Bencana"
+                ],
+                "summary": "Daftar semua bencana (paginated)",
+                "operationId": "3bc775979fa3b63b64531d678fff37a1",
+                "parameters": [
+                    {
+                        "name": "jenis",
+                        "in": "query",
+                        "description": "Filter jenis bencana: gempa, tsunami, banjir, cuaca_ekstrem, dll",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "Filter bencana dalam N hari terakhir",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sumber",
+                        "in": "query",
+                        "description": "Filter sumber data: bmkg, manual_admin, komunitas",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "min_magnitude",
+                        "in": "query",
+                        "description": "Filter minimum magnitude",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar bencana berhasil diambil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Bencana"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "page": {
+                                                    "type": "integer"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/bencana/{id}": {
+            "get": {
+                "tags": [
+                    "Bencana"
+                ],
+                "summary": "Detail bencana berdasarkan ID",
+                "operationId": "e3c57e2ff0842101e02ab9ac5879d4dd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail bencana",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Bencana"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Bencana tidak ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/v1/gempa/terkini": {
+            "get": {
+                "tags": [
+                    "Bencana"
+                ],
+                "summary": "Data gempa terkini langsung dari BMKG API",
+                "operationId": "43b7b401c246c9c1cd6ae960574c7d9a",
+                "responses": {
+                    "200": {
+                        "description": "Data gempa terkini dari BMKG",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        },
+                                        "cached_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/peta/bencana-aktif": {
+            "get": {
+                "tags": [
+                    "Bencana"
+                ],
+                "summary": "Bencana aktif untuk peta (N hari terakhir)",
+                "operationId": "11d8743ac5a7525940f72eb9e40793bf",
+                "parameters": [
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "Periode hari",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data bencana aktif untuk peta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/bencana/nearby": {
+            "get": {
+                "tags": [
+                    "Bencana"
+                ],
+                "summary": "Cari bencana terdekat dari koordinat",
+                "operationId": "b168a722a0ee84318076da04a39daf8b",
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "Latitude",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "description": "Longitude",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "description": "Radius pencarian (km)",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "Periode hari",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar bencana terdekat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "query": {
+                                            "type": "object"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/v1/laporan": {
+            "get": {
+                "tags": [
+                    "Laporan Komunitas"
+                ],
+                "summary": "Daftar laporan komunitas",
+                "operationId": "03e065f11124ecc60ca877865b19cce6",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "verified",
+                                "rejected"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar laporan berhasil diambil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Laporan Komunitas"
+                ],
+                "summary": "Kirim laporan bencana baru",
+                "operationId": "b6d6e32ce82c7789e874831674344641",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "jenis_bencana",
+                                    "latitude",
+                                    "longitude",
+                                    "deskripsi"
+                                ],
+                                "properties": {
+                                    "jenis_bencana": {
+                                        "type": "string",
+                                        "example": "banjir"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": -6.2088
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 106.8456
+                                    },
+                                    "wilayah": {
+                                        "type": "string",
+                                        "example": "Jakarta Selatan"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string",
+                                        "example": "Banjir setinggi 50cm di area perumahan"
+                                    },
+                                    "foto": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Laporan berhasil dikirim"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/laporan/{id}": {
+            "get": {
+                "tags": [
+                    "Laporan Komunitas"
+                ],
+                "summary": "Detail laporan",
+                "operationId": "0f71b38cab80871ed46ed1e162d4895e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail laporan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/lokasi": {
+            "get": {
+                "tags": [
+                    "Lokasi"
+                ],
+                "summary": "Daftar semua lokasi user",
+                "operationId": "e715704fbc6097feee1cdae89b45b76d",
+                "responses": {
+                    "200": {
+                        "description": "Daftar lokasi berhasil diambil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Lokasi"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Lokasi"
+                ],
+                "summary": "Tambah lokasi baru",
+                "operationId": "ced68c80703dfac4fa47bb21e2a9ec2c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama_lokasi",
+                                    "latitude",
+                                    "longitude",
+                                    "radius_km"
+                                ],
+                                "properties": {
+                                    "nama_lokasi": {
+                                        "type": "string",
+                                        "example": "Rumah Utama"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": -6.2088
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 106.8456
+                                    },
+                                    "radius_km": {
+                                        "type": "integer",
+                                        "example": 50
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Lokasi berhasil ditambahkan"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/lokasi/{id}": {
+            "get": {
+                "tags": [
+                    "Lokasi"
+                ],
+                "summary": "Detail lokasi",
+                "operationId": "548862b5b9f03806ac8ababe8ef8318e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail lokasi"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Lokasi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Lokasi"
+                ],
+                "summary": "Update lokasi",
+                "operationId": "859d6b6b609e1913c6b2cbd4c42eca77",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nama_lokasi": {
+                                        "type": "string"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "radius_km": {
+                                        "type": "integer"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lokasi berhasil diperbarui"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Lokasi"
+                ],
+                "summary": "Hapus lokasi",
+                "operationId": "72d16fc343dabe73876a8cb26e377460",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lokasi berhasil dihapus"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/lokasi/{id}/toggle": {
+            "patch": {
+                "tags": [
+                    "Lokasi"
+                ],
+                "summary": "Toggle status aktif lokasi",
+                "operationId": "bfb974f4fcc3b4dab060fab4fe49a49e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status lokasi berhasil diubah"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    },
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Bencana": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "event_id": {
+                        "type": "string",
+                        "example": "bmkg-abc123"
+                    },
+                    "jenis_bencana": {
+                        "type": "string",
+                        "enum": [
+                            "gempa",
+                            "tsunami",
+                            "banjir",
+                            "cuaca_ekstrem",
+                            "gunung_api",
+                            "tanah_longsor"
+                        ]
+                    },
+                    "magnitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 5.2,
+                        "nullable": true
+                    },
+                    "kedalaman_km": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 10,
+                        "nullable": true
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": -6.2088
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 106.8456
+                    },
+                    "wilayah": {
+                        "type": "string",
+                        "example": "Selatan Bekasi, Jawa Barat"
+                    },
+                    "sumber_api": {
+                        "type": "string",
+                        "example": "bmkg"
+                    },
+                    "terjadi_pada": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Lokasi": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nama_lokasi": {
+                        "type": "string",
+                        "example": "Rumah Utama"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": -6.2088
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 106.8456
+                    },
+                    "radius_km": {
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "Alert": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "bencana_id": {
+                        "type": "integer"
+                    },
+                    "lokasi_id": {
+                        "type": "integer"
+                    },
+                    "jarak_km": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 16.5
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "sent",
+                            "read",
+                            "dismissed"
+                        ]
+                    },
+                    "sent_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "read_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Laporan": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "jenis_bencana": {
+                        "type": "string",
+                        "example": "banjir"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "wilayah": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "deskripsi": {
+                        "type": "string"
+                    },
+                    "foto_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "verified",
+                            "rejected"
+                        ]
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
+            "apiKey": {
+                "type": "apiKey",
+                "name": "X-API-Key",
+                "in": "header"
+            },
+            "basicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Admin",
+            "description": "Endpoint admin: statistik, manajemen laporan, user, bencana"
+        },
+        {
+            "name": "Alerts",
+            "description": "Riwayat dan manajemen peringatan bencana user"
+        },
+        {
+            "name": "Authentication",
+            "description": "JWT Auth endpoints: register, login, logout, refresh, profile, API key management"
+        },
+        {
+            "name": "Bencana",
+            "description": "Data bencana publik: daftar, detail, nearby, gempa BMKG terkini, peta bencana aktif"
+        },
+        {
+            "name": "Laporan Komunitas",
+            "description": "Laporan bencana dari komunitas/masyarakat"
+        },
+        {
+            "name": "Lokasi",
+            "description": "Manajemen lokasi pantauan user (CRUD)"
+        }
+    ]
+}

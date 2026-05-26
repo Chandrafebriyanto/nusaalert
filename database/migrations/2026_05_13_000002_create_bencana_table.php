@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('bencana', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('event_id')->unique();
             $table->string('jenis_bencana'); // gempa, tsunami, banjir, cuaca_ekstrem, gunung_api
             $table->decimal('magnitude', 4, 1)->nullable();
@@ -29,6 +30,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('bencana');
+        Schema::table('bencana', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
+        });
     }
 };

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alert;
+use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AlertController extends Controller
 {
+    use ApiResponseTrait;
+
     public function index(Request $request)
     {
         $query = Alert::with(['bencana', 'lokasi'])
@@ -27,12 +30,28 @@ class AlertController extends Controller
 
         $alerts = $query->paginate(15);
 
+        if ($this->wantsJson($request)) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $alerts->items(),
+                'meta' => [
+                    'total' => $alerts->total(),
+                    'page' => $alerts->currentPage(),
+                    'per_page' => $alerts->perPage(),
+                    'last_page' => $alerts->lastPage(),
+                ],
+            ]);
+        }
+
         return view('alerts.index', compact('alerts'));
     }
 
-    public function markAsRead(Alert $alert)
+    public function markAsRead(Request $request, Alert $alert)
     {
         if ($alert->user_id !== Auth::id()) {
+            if ($this->wantsJson($request)) {
+                return response()->json(['status' => 'error', 'message' => 'Unauthorized.'], 403);
+            }
             abort(403);
         }
 
@@ -41,19 +60,19 @@ class AlertController extends Controller
             'read_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Alert ditandai telah dibaca.');
+        return $this->respondWithSuccessOrBack($request, 'Alert ditandai telah dibaca.', ['alert' => $alert->fresh()]);
     }
 
-    public function markAllRead()
+    public function markAllRead(Request $request)
     {
-        Alert::where('user_id', Auth::id())
+        $count = Alert::where('user_id', Auth::id())
             ->where('status', 'sent')
             ->update([
                 'status' => 'read',
                 'read_at' => now(),
             ]);
 
-        return redirect()->back()->with('success', 'Semua alert ditandai telah dibaca.');
+        return $this->respondWithSuccessOrBack($request, "Semua alert ditandai telah dibaca. ({$count} alert)");
     }
 
     /**

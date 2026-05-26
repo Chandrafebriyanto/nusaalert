@@ -59,4 +59,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::delete('/laporan/{laporan}/reject', [AdminController::class, 'rejectLaporan'])->name('admin.laporan.reject');
     Route::patch('/users/{user}/role', [AdminController::class, 'updateRole'])->name('admin.users.role');
     Route::post('/bencana', [AdminController::class, 'storeBencana'])->name('admin.bencana.store');
+    Route::delete('/laporan/{laporan}', [AdminController::class, 'destroyLaporan'])->name('admin.laporan.destroy');
+    Route::delete('/bencana/{bencana}', [AdminController::class, 'destroyBencana'])->name('admin.bencana.destroy');
 });

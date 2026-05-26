@@ -12,16 +12,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
-    })
-    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'auth.apikey' => \App\Http\Middleware\AuthenticateApiKey::class,
+            'auth.basic.api' => \App\Http\Middleware\AuthenticateBasicApi::class,
+        ]);
+
         $middleware->validateCsrfTokens(except: [
             '/login',
             '/register',
-            '/logout'   
+            '/logout',
+            'api/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
-    

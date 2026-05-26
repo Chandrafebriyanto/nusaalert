@@ -6,12 +6,15 @@ use App\Models\Bencana;
 use App\Models\Alert;
 use App\Models\Laporan;
 use App\Services\BmkgService;
+use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index(BmkgService $bmkg)
+    use ApiResponseTrait;
+
+    public function index(Request $request, BmkgService $bmkg)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -101,11 +104,32 @@ class DashboardController extends Controller
             }
         }
 
-        return view('dashboard', compact(
+        $data = compact(
             'lokasi', 'lokasiAktif', 'alertsTerbaru',
             'totalLokasi', 'totalAlerts', 'unreadAlerts',
             'bencanaAktif', 'statusArea', 'statusColor'
-        ));
+        );
+
+        if ($this->wantsJson($request)) {
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'lokasi' => $lokasi,
+                    'lokasi_aktif' => $lokasiAktif->values(),
+                    'alerts_terbaru' => $alertsTerbaru,
+                    'stats' => [
+                        'total_lokasi' => $totalLokasi,
+                        'total_alerts' => $totalAlerts,
+                        'unread_alerts' => $unreadAlerts,
+                    ],
+                    'bencana_aktif' => $bencanaAktif,
+                    'status_area' => $statusArea,
+                    'status_color' => $statusColor,
+                ],
+            ]);
+        }
+
+        return view('dashboard', $data);
     }
 
     /**

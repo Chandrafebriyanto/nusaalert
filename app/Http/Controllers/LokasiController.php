@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lokasi;
+use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -10,12 +11,22 @@ use Illuminate\Support\Facades\Gate;
 
 class LokasiController extends Controller
 {
-    public function index()
+    use ApiResponseTrait;
+
+    public function index(Request $request)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         
         $lokasi = $user->lokasi()->orderBy('created_at', 'desc')->get();
+
+        if ($this->wantsJson($request)) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $lokasi,
+            ]);
+        }
+
         return view('lokasi.index', compact('lokasi'));
     }
 
@@ -31,11 +42,11 @@ class LokasiController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         
-        $user->lokasi()->create($request->only([
+        $lokasi = $user->lokasi()->create($request->only([
             'nama_lokasi', 'latitude', 'longitude', 'radius_km'
         ]));
 
-        return redirect()->route('lokasi.index')->with('success', 'Lokasi berhasil ditambahkan!');
+        return $this->respondWithSuccessOrRedirect($request, 'lokasi.index', 'Lokasi berhasil ditambahkan!', ['lokasi' => $lokasi], 201);
     }
 
     public function update(Request $request, Lokasi $lokasi)
@@ -54,20 +65,22 @@ class LokasiController extends Controller
             'nama_lokasi', 'latitude', 'longitude', 'radius_km', 'is_active'
         ]));
 
-        return redirect()->route('lokasi.index')->with('success', 'Lokasi berhasil diperbarui!');
+        return $this->respondWithSuccessOrRedirect($request, 'lokasi.index', 'Lokasi berhasil diperbarui!', ['lokasi' => $lokasi->fresh()]);
     }
 
-    public function toggleActive(Lokasi $lokasi)
+    public function toggleActive(Request $request, Lokasi $lokasi)
     {
         abort_unless(Auth::id() === $lokasi->user_id, 403, 'Unauthorized');
         $lokasi->update(['is_active' => !$lokasi->is_active]);
-        return redirect()->route('lokasi.index')->with('success', 'Status lokasi diperbarui!');
+
+        return $this->respondWithSuccessOrRedirect($request, 'lokasi.index', 'Status lokasi diperbarui!', ['lokasi' => $lokasi->fresh()]);
     }
 
-    public function destroy(Lokasi $lokasi)
+    public function destroy(Request $request, Lokasi $lokasi)
     {
         abort_unless(Auth::id() === $lokasi->user_id, 403, 'Unauthorized');
         $lokasi->delete();
-        return redirect()->route('lokasi.index')->with('success', 'Lokasi berhasil dihapus!');
+
+        return $this->respondWithSuccessOrRedirect($request, 'lokasi.index', 'Lokasi berhasil dihapus!');
     }
 }

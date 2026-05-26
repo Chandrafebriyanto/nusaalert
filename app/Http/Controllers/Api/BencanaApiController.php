@@ -2,13 +2,47 @@
 
 namespace App\Http\Controllers\Api;
 
+use OpenApi\Annotations as OA;
+
 use App\Http\Controllers\Controller;
 use App\Models\Bencana;
 use App\Services\BmkgService;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Tag(
+ *     name="Bencana",
+ *     description="Data bencana publik: daftar, detail, nearby, gempa BMKG terkini, peta bencana aktif"
+ * )
+ */
 class BencanaApiController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/v1/bencana",
+     *     summary="Daftar semua bencana (paginated)",
+     *     tags={"Bencana"},
+     *     @OA\Parameter(name="jenis", in="query", required=false, @OA\Schema(type="string"), description="Filter jenis bencana: gempa, tsunami, banjir, cuaca_ekstrem, dll"),
+     *     @OA\Parameter(name="days", in="query", required=false, @OA\Schema(type="integer"), description="Filter bencana dalam N hari terakhir"),
+     *     @OA\Parameter(name="sumber", in="query", required=false, @OA\Schema(type="string"), description="Filter sumber data: bmkg, manual_admin, komunitas"),
+     *     @OA\Parameter(name="min_magnitude", in="query", required=false, @OA\Schema(type="number"), description="Filter minimum magnitude"),
+     *     @OA\Parameter(name="per_page", in="query", required=false, @OA\Schema(type="integer", default=20), description="Jumlah data per halaman"),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Daftar bencana berhasil diambil",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Bencana")),
+     *             @OA\Property(property="meta", type="object",
+     *                 @OA\Property(property="total", type="integer"),
+     *                 @OA\Property(property="page", type="integer"),
+     *                 @OA\Property(property="per_page", type="integer"),
+     *                 @OA\Property(property="last_page", type="integer")
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         $query = Bencana::orderBy('terjadi_pada', 'desc');
@@ -43,6 +77,23 @@ class BencanaApiController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/bencana/{id}",
+     *     summary="Detail bencana berdasarkan ID",
+     *     tags={"Bencana"},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detail bencana",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Bencana")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Bencana tidak ditemukan")
+     * )
+     */
     public function show(Bencana $bencana)
     {
         return response()->json([
@@ -64,6 +115,22 @@ class BencanaApiController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/gempa/terkini",
+     *     summary="Data gempa terkini langsung dari BMKG API",
+     *     tags={"Bencana"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Data gempa terkini dari BMKG",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object"),
+     *             @OA\Property(property="cached_at", type="string", format="date-time")
+     *         )
+     *     )
+     * )
+     */
     public function gempaTerkini(BmkgService $bmkg)
     {
         $data = $bmkg->getGempaTerkini();
@@ -74,6 +141,23 @@ class BencanaApiController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/peta/bencana-aktif",
+     *     summary="Bencana aktif untuk peta (N hari terakhir)",
+     *     tags={"Bencana"},
+     *     @OA\Parameter(name="days", in="query", required=false, @OA\Schema(type="integer", default=30), description="Periode hari"),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Data bencana aktif untuk peta",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="total", type="integer")
+     *         )
+     *     )
+     * )
+     */
     public function bencanaAktif(Request $request)
     {
         $days = $request->integer('days', 30);
@@ -104,7 +188,26 @@ class BencanaApiController extends Controller
     }
 
     /**
-     * Find disasters near a given coordinate within a radius
+     * @OA\Get(
+     *     path="/api/v1/bencana/nearby",
+     *     summary="Cari bencana terdekat dari koordinat",
+     *     tags={"Bencana"},
+     *     @OA\Parameter(name="lat", in="query", required=true, @OA\Schema(type="number", format="float"), description="Latitude"),
+     *     @OA\Parameter(name="lng", in="query", required=true, @OA\Schema(type="number", format="float"), description="Longitude"),
+     *     @OA\Parameter(name="radius", in="query", required=false, @OA\Schema(type="number", default=100), description="Radius pencarian (km)"),
+     *     @OA\Parameter(name="days", in="query", required=false, @OA\Schema(type="integer", default=30), description="Periode hari"),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Daftar bencana terdekat",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="query", type="object"),
+     *             @OA\Property(property="total", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Validation error")
+     * )
      */
     public function nearby(Request $request)
     {

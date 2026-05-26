@@ -9,7 +9,7 @@
     </div>
 
     <!-- Hero Content -->
-    <div class="relative z-10 w-full px-4 md:px-10 py-16 md:py-24 flex flex-col md:flex-row items-center gap-10">
+    <div class="relative z-10 w-full px-4 md:px-10 py-16 md:py-24 flex flex-col md:flex-row items-center justify-center gap-10">
         <div class="flex-1 max-w-2xl flex flex-col gap-6">
             <span class="inline-block px-4 py-1.5 bg-error-container text-on-error-container font-sans font-bold text-sm rounded-full self-start">
                 Sistem Peringatan Dini Bencana

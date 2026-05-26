@@ -53,9 +53,18 @@
                         </div>
                         <span class="text-xs font-sans font-bold text-on-surface">{{ $laporan->user->name }}</span>
                     </div>
+                    <div class="flex items-center gap-4">
                     <a href="https://maps.google.com/?q={{ $laporan->latitude }},{{ $laporan->longitude }}" target="_blank" class="text-primary hover:text-primary-container tooltip" title="Buka di Gmaps">
                         <span class="material-symbols-outlined">map</span>
                     </a>
+                    <form action="{{route('admin.laporan.destroy', $laporan->id)}}" method="POST" onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-error hover:text-error-container tooltip" title="Hapus Laporan">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </form>
+                    </div>
                 </div>
             </div>
         </div>

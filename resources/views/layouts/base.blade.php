@@ -6,7 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@yield('title', 'NusaAlert') — Sistem Peringatan Dini Bencana</title>
     <meta name="description" content="@yield('meta_description', 'NusaAlert - Sistem Peringatan Dini Bencana Alam Personal. Dapatkan notifikasi real-time dari BMKG langsung di perangkat Anda.')" />
-
+    <meta name="theme-color" content="#d32f2f" />
+    <link rel="manifest" href="{{ asset('manifest.json') }}" />
     {{-- Fonts & Icons --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,5 +27,16 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     @stack('scripts')
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 </body>
 </html>

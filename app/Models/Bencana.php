@@ -12,6 +12,7 @@ class Bencana extends Model
     protected $table = 'bencana';
 
     protected $fillable = [
+        'user_id',
         'event_id',
         'jenis_bencana',
         'magnitude',
@@ -39,5 +40,10 @@ class Bencana extends Model
     public function alerts()
     {
         return $this->hasMany(Alert::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

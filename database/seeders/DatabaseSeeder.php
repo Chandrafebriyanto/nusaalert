@@ -79,33 +79,36 @@ class DatabaseSeeder extends Seeder
 
         // Create demo bencana data
         $bencana1 = Bencana::create([
-            'event_id' => 'bmkg-demo-001',
+            'user_id' => $admin->id,
+            'event_id' => 'manual-demo-001',
             'jenis_bencana' => 'gempa',
             'magnitude' => 5.2,
             'kedalaman_km' => 10,
             'latitude' => -6.3500,
             'longitude' => 106.9000,
             'wilayah' => 'Selatan Bekasi, Jawa Barat',
-            'sumber_api' => 'bmkg',
+            'sumber_api' => 'manual_admin',
             'raw_data' => ['source' => 'demo'],
             'terjadi_pada' => now()->subHours(2),
         ]);
 
         $bencana2 = Bencana::create([
-            'event_id' => 'bmkg-demo-002',
+            'user_id' => $admin->id,
+            'event_id' => 'manual-demo-002',
             'jenis_bencana' => 'gempa',
             'magnitude' => 6.8,
             'kedalaman_km' => 10,
             'latitude' => -8.3925,
             'longitude' => 110.7658,
             'wilayah' => '120km Barat Daya Pacitan, Jawa Timur',
-            'sumber_api' => 'bmkg',
+            'sumber_api' => 'manual_admin',
             'raw_data' => ['source' => 'demo'],
             'terjadi_pada' => now()->subHours(5),
         ]);
 
         $bencana3 = Bencana::create([
-            'event_id' => 'bmkg-demo-003',
+            'user_id' => $admin->id,
+            'event_id' => 'manual-demo-003',
             'jenis_bencana' => 'banjir',
             'magnitude' => null,
             'kedalaman_km' => null,
