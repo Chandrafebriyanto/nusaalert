@@ -7,6 +7,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\WebPush\WebPushMessage;
+use NotificationChannels\WebPush\WebPushChannel;
 
 class DisasterAlertNotification extends Notification implements ShouldQueue
 {
@@ -18,7 +20,41 @@ class DisasterAlertNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database', 'mail', WebPushChannel::class];
+    }
+
+    public function toWebPush($notifiable, $notification)
+    {
+        $bencana = $this->alert->bencana;
+        $severity = 'PERINGATAN';
+        $isCritical = false;
+
+        if ($bencana->magnitude) {
+            if ($bencana->magnitude >= 6) {
+                $severity = 'AWAS - KRITIS';
+                $isCritical = true;
+            } elseif ($bencana->magnitude >= 4) {
+                $severity = 'SIAGA';
+            }
+        }
+
+        if ($bencana->jenis_bencana === 'tsunami') {
+            $severity = 'AWAS - TSUNAMI';
+            $isCritical = true;
+        }
+
+        $message = (new WebPushMessage)
+            ->title("{$severity}: " . strtoupper($bencana->jenis_bencana))
+            ->icon('/icons/icon-192x192.png')
+            ->body("Terdeteksi di {$bencana->wilayah}. Jarak: {$this->alert->jarak_km}km dari {$this->alert->lokasi->nama_lokasi}.")
+            ->action('Lihat Detail', url('/dashboard'))
+            ->data([
+                'action_url' => url('/dashboard'),
+                'tag' => 'nusaalert-bencana-' . $this->alert->bencana_id,
+                'requireInteraction' => $isCritical,
+            ]);
+
+        return $message;
     }
 
     public function toMail(object $notifiable): MailMessage

@@ -112,7 +112,7 @@
                             {{ $alert->status === 'read' ? 'Dibaca' : 'Baru' }}
                         </span>
                         
-                        @if($alert->status === 'sent')
+                        @if($alert->status === 'sent' && $alert->user_id === auth()->id())
                             <form action="{{ route('alerts.read', $alert) }}" method="POST">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="p-2 text-primary hover:bg-primary-container rounded-full transition-colors tooltip" title="Tandai sudah dibaca">

@@ -25,7 +25,7 @@
     @forelse($laporanVerified as $laporan)
         <div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col">
             @if($laporan->foto_url)
-                <img src="{{ Storage::url($laporan->foto_url) }}" alt="Foto Bencana" class="w-full h-48 object-cover">
+                <img src="{{ asset('storage/' . $laporan->foto_url) }}" alt="Foto Bencana" class="w-full h-48 object-cover">
             @else
                 <div class="w-full h-48 bg-surface-container-high flex items-center justify-center text-on-surface-variant opacity-50">
                     <span class="material-symbols-outlined text-5xl">image_not_supported</span>
@@ -57,6 +57,7 @@
                     <a href="https://maps.google.com/?q={{ $laporan->latitude }},{{ $laporan->longitude }}" target="_blank" class="text-primary hover:text-primary-container tooltip" title="Buka di Gmaps">
                         <span class="material-symbols-outlined">map</span>
                     </a>
+                    @if(auth()->user()->hasRole('admin'))
                     <form action="{{route('admin.laporan.destroy', $laporan->id)}}" method="POST" onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
                         @csrf
                         @method('DELETE')
@@ -64,6 +65,7 @@
                             <span class="material-symbols-outlined">delete</span>
                         </button>
                     </form>
+                    @endif
                     </div>
                 </div>
             </div>
@@ -93,7 +95,25 @@
                 
                 <div class="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
                     <span class="text-xs font-sans text-on-surface-variant">{{ $laporan->created_at->format('d/m/Y H:i') }}</span>
-                    <span class="text-xs font-sans font-bold text-on-surface">Oleh: {{ $laporan->user->name }}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-sans font-bold text-on-surface">Oleh: {{ $laporan->user->name }}</span>
+                        @if(auth()->user()->hasRole('admin'))
+                            <div class="flex gap-2 ml-2 border-l border-outline-variant pl-2">
+                                <form action="{{ route('admin.laporan.verify', $laporan) }}" method="POST">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" class="bg-tertiary text-on-tertiary font-sans font-bold text-xs px-2 py-1 rounded hover:opacity-90 tooltip" title="Verifikasi">
+                                        <span class="material-symbols-outlined text-[14px]">check</span>
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.laporan.reject', $laporan) }}" method="POST" onsubmit="return confirm('Tolak laporan ini?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="bg-error text-on-error font-sans font-bold text-xs px-2 py-1 rounded hover:opacity-90 tooltip" title="Tolak">
+                                        <span class="material-symbols-outlined text-[14px]">close</span>
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

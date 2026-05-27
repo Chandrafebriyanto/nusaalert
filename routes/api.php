@@ -55,7 +55,7 @@ Route::prefix('v1')->group(function () {
         });
 
         // Lokasi CRUD
-        Route::apiResource('lokasi', LokasiApiController::class);
+        Route::apiResource('lokasi', LokasiApiController::class)->names('api.lokasi');
         Route::patch('/lokasi/{lokasi}/toggle', [LokasiApiController::class, 'toggleActive']);
 
         // Alerts

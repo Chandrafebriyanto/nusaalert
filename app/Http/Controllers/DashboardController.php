@@ -21,7 +21,7 @@ class DashboardController extends Controller
 
         // User's locations
         $lokasi = $user->lokasi()->get();
-        $lokasiAktif = $lokasi->where('is_active', true);
+        $lokasiAktif = $lokasi->where('is_active', true)->values();
 
         // Latest alerts for this user
         $alertsTerbaru = Alert::where('user_id', $user->id)

@@ -18,11 +18,12 @@ Route::get('/kebijakan-privasi', [LandingController::class, 'kebijakanPrivasi'])
 Route::get('/kontak-darurat', [LandingController::class, 'kontakDarurat'])->name('kontak-darurat');
 
 // Auth Routes (Guest only)
-
+Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+});
 
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
@@ -42,6 +43,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.index');
     Route::patch('/alerts/{alert}/read', [AlertController::class, 'markAsRead'])->name('alerts.read');
     Route::patch('/alerts/mark-all-read', [AlertController::class, 'markAllRead'])->name('alerts.markAllRead');
+    
+    // Push Subscription
+    Route::post('/push-subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'subscribe']);
+    Route::post('/push-unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe']);
 
     // Laporan Komunitas
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');

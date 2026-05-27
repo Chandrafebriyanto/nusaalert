@@ -17,6 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.basic.api' => \App\Http\Middleware\AuthenticateBasicApi::class,
         ]);
 
+        $middleware->redirectGuestsTo('/login');
+        $middleware->redirectUsersTo('/dashboard');
+
         $middleware->validateCsrfTokens(except: [
             '/login',
             '/register',

@@ -48,8 +48,16 @@ self.addEventListener('push', function(event) {
         body: data.body || "Ada peringatan sistem baru.",
         icon: data.icon || '/icons/icon-192x192.png',
         badge: '/icons/icon-192x192.png',
+        tag: data.tag || 'nusaalert-' + Date.now(),
+        renotify: true,
+        requireInteraction: data.requireInteraction || false,
+        vibrate: [200, 100, 200, 100, 300],
+        actions: [
+            { action: 'open', title: 'Lihat Detail' },
+            { action: 'dismiss', title: 'Tutup' }
+        ],
         data: {
-            url: data.action_url || '/'
+            url: data.action_url || '/dashboard'
         }
     };
 
@@ -61,7 +69,24 @@ self.addEventListener('push', function(event) {
 // Notification Click Event Listener
 self.addEventListener('notificationclick', function(event) {
     event.notification.close();
+
+    if (event.action === 'dismiss') {
+        return;
+    }
+
+    const urlToOpen = event.notification.data?.url || '/dashboard';
+
     event.waitUntil(
-        clients.openWindow(event.notification.data.url)
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+            // Focus existing window if available
+            for (const client of windowClients) {
+                if (client.url.includes(self.location.origin) && 'focus' in client) {
+                    client.navigate(urlToOpen);
+                    return client.focus();
+                }
+            }
+            // Open new window
+            return clients.openWindow(urlToOpen);
+        })
     );
 });

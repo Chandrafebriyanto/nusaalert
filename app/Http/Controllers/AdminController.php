@@ -87,6 +87,10 @@ class AdminController extends Controller
      */
     public function storeBencana(Request $request)
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        abort_unless($user->hasRole('admin'), 403, 'Akses admin diperlukan.');
+
         $request->validate([
             'jenis_bencana' => 'required|string|in:gempa,tsunami,banjir,cuaca_ekstrem,gunung_api,tanah_longsor',
             'magnitude' => 'nullable|numeric|min:0|max:10',
@@ -139,7 +143,11 @@ class AdminController extends Controller
                     'sent_at' => now(),
                 ]);
 
-                SendDisasterAlertJob::dispatch($alert);
+                try {
+                    SendDisasterAlertJob::dispatch($alert);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning("Failed to dispatch alert job for Alert #{$alert->id}: " . $e->getMessage());
+                }
                 $alertCount++;
             }
         }
@@ -151,6 +159,10 @@ class AdminController extends Controller
 
     public function destroyLaporan(Request $request, Laporan $laporan)
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        abort_unless($user->hasRole('admin'), 403, 'Akses admin diperlukan.');
+
         if($laporan->foto_url){
             Storage::disk('public')->delete($laporan->foto_url);
         }
@@ -161,12 +173,12 @@ class AdminController extends Controller
 
     public function destroyBencana(Request $request, Bencana $bencana)
     {
-        if($bencana->user_id !== Auth::id()){
-            if ($this->wantsJson($request)) {
-                return response()->json(['status' => 'error', 'message' => 'Unauthorized.'], 403);
-            }
-            abort(403, 'Anda tidak memiliki izin untuk menghapus data bencana ini.');
-        }
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        abort_unless($user->hasRole('admin'), 403, 'Akses admin diperlukan.');
+
+        // Delete related alerts first to avoid foreign key constraint errors
+        $bencana->alerts()->delete();
 
         $bencana->delete();
         return $this->respondWithSuccessOrBack($request, 'Data Bencana berhasil dihapus.');

@@ -8,6 +8,26 @@
     <p class="text-lg text-on-surface-variant font-sans">Pantau situasi di sekitar lokasi Anda secara real-time.</p>
 </div>
 
+{{-- Push Notification Permission Banner --}}
+<div id="pushNotifBanner" class="hidden bg-primary-container text-on-primary-container p-4 rounded-xl mb-6 shadow-sm border border-primary/30 flex-col sm:flex-row items-start sm:items-center gap-4">
+    <div class="flex items-center gap-3 flex-1">
+        <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+        <div>
+            <h3 class="font-display font-bold text-on-primary-container">Aktifkan Notifikasi Push</h3>
+            <p class="text-sm font-sans text-on-primary-container/80">Dapatkan peringatan bencana langsung di perangkat Anda, bahkan saat browser ditutup.</p>
+        </div>
+    </div>
+    <div class="flex gap-2 shrink-0">
+        <button onclick="requestPushPermission()" class="bg-primary text-on-primary font-sans font-bold px-4 py-2 rounded-lg shadow-sm hover:opacity-90 transition-opacity text-sm flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">notifications</span>
+            Aktifkan
+        </button>
+        <button onclick="dismissPushBanner()" class="text-on-primary-container/60 hover:text-on-primary-container p-2 rounded-lg hover:bg-primary-container transition-colors">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+    </div>
+</div>
+
 <!-- Status Area & Quick Stats -->
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
     <!-- Overall Status Card -->
@@ -168,6 +188,39 @@
         if (bounds.length > 0) {
             map.fitBounds(bounds, { padding: [50, 50] });
         }
+
+        // Show push notification banner if not yet granted
+        if ('Notification' in window && 'PushManager' in window) {
+            const dismissed = localStorage.getItem('nusaalert_push_dismissed');
+            if (Notification.permission === 'default' && !dismissed) {
+                document.getElementById('pushNotifBanner').classList.remove('hidden');
+            }
+        }
     });
+
+    async function requestPushPermission() {
+        const banner = document.getElementById('pushNotifBanner');
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                banner.classList.add('hidden');
+                // The service worker auto-subscription in base.blade.php will handle the rest
+                const registration = await navigator.serviceWorker.ready;
+                if (typeof initPushNotifications === 'function') {
+                    initPushNotifications(registration);
+                }
+            } else {
+                banner.classList.add('hidden');
+            }
+        } catch (e) {
+            console.error('Push permission error:', e);
+            banner.classList.add('hidden');
+        }
+    }
+
+    function dismissPushBanner() {
+        document.getElementById('pushNotifBanner').classList.add('hidden');
+        localStorage.setItem('nusaalert_push_dismissed', '1');
+    }
 </script>
 @endpush
