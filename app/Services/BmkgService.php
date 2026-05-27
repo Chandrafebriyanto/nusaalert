@@ -22,7 +22,7 @@ class BmkgService
     {
         return Cache::remember('bmkg_gempa_terkini', 120, function () {
             try {
-                $response = Http::timeout(10)->get($this->baseUrl . '/autogempa.json');
+                $response = Http::timeout(10)->withoutVerifying()->get($this->baseUrl . '/autogempa.json');
                 if ($response->successful()) {
                     $data = $response->json();
                     return $data['Infogempa']['gempa'] ?? null;
@@ -41,7 +41,7 @@ class BmkgService
     {
         return Cache::remember('bmkg_gempa_m5', 120, function () {
             try {
-                $response = Http::timeout(10)->get($this->baseUrl . '/gempaterkini.json');
+                $response = Http::timeout(10)->withoutVerifying()->get($this->baseUrl . '/gempaterkini.json');
                 if ($response->successful()) {
                     $data = $response->json();
                     return $data['Infogempa']['gempa'] ?? [];
@@ -60,7 +60,7 @@ class BmkgService
     {
         return Cache::remember('bmkg_gempa_dirasakan', 120, function () {
             try {
-                $response = Http::timeout(10)->get($this->baseUrl . '/gempadirasakan.json');
+                $response = Http::timeout(10)->withoutVerifying()->get($this->baseUrl . '/gempadirasakan.json');
                 if ($response->successful()) {
                     $data = $response->json();
                     return $data['Infogempa']['gempa'] ?? [];

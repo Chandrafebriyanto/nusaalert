@@ -191,14 +191,18 @@
     function switchTab(tab) {
         if(tab === 'verified') {
             document.getElementById('content-verified').classList.remove('hidden');
+            document.getElementById('content-verified').classList.add('grid');
             document.getElementById('content-pending').classList.add('hidden');
+            document.getElementById('content-pending').classList.remove('grid');
             document.getElementById('tab-verified').classList.replace('text-on-surface-variant', 'text-primary');
             document.getElementById('tab-verified').classList.replace('border-transparent', 'border-primary');
             document.getElementById('tab-pending').classList.replace('text-primary', 'text-on-surface-variant');
             document.getElementById('tab-pending').classList.replace('border-primary', 'border-transparent');
         } else {
             document.getElementById('content-pending').classList.remove('hidden');
+            document.getElementById('content-pending').classList.add('grid');
             document.getElementById('content-verified').classList.add('hidden');
+            document.getElementById('content-verified').classList.remove('grid');
             document.getElementById('tab-pending').classList.replace('text-on-surface-variant', 'text-primary');
             document.getElementById('tab-pending').classList.replace('border-transparent', 'border-primary');
             document.getElementById('tab-verified').classList.replace('text-primary', 'text-on-surface-variant');

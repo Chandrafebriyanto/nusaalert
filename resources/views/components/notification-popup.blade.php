@@ -139,6 +139,36 @@
         modal.classList.remove('hidden');
     }
 
+    function showDeviceNotification(alert) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            const title = `NusaAlert: ${alert.jenis.toUpperCase()} ${alert.magnitude ? 'M' + alert.magnitude : ''}`;
+            const options = {
+                body: `${alert.wilayah}\nJarak: ${alert.jarak_km} km dari ${alert.lokasi_nama}`,
+                icon: '/icons/icon-192x192.png',
+                badge: '/icons/icon-192x192.png',
+                tag: 'nusaalert-bencana-' + alert.id,
+                requireInteraction: alert.severity === 'awas',
+                data: {
+                    url: '/dashboard'
+                }
+            };
+            
+            try {
+                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.ready.then(registration => {
+                        registration.showNotification(title, options);
+                    }).catch(() => {
+                        new Notification(title, options);
+                    });
+                } else {
+                    new Notification(title, options);
+                }
+            } catch (e) {
+                console.error('Failed to trigger native device notification:', e);
+            }
+        }
+    }
+
     window.closeCriticalModal = function() {
         document.getElementById('criticalAlertModal').classList.add('hidden');
     };
@@ -159,6 +189,9 @@
                     if (isAlertShown(alert.id)) return;
 
                     markAlertShown(alert.id);
+                    
+                    // Trigger native device system notification
+                    showDeviceNotification(alert);
 
                     // Show full-screen modal for critical (M6+ or tsunami)
                     if (alert.severity === 'awas' && !shownCritical) {

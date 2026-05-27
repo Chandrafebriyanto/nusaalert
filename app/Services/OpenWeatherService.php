@@ -39,7 +39,7 @@ class OpenWeatherService
 
         return Cache::remember($cacheKey, 600, function () use ($lat, $lng) {
             try {
-                $response = Http::timeout(10)->get("{$this->baseUrl}/data/2.5/weather", [
+                $response = Http::timeout(10)->withoutVerifying()->get("{$this->baseUrl}/data/2.5/weather", [
                     'lat' => $lat,
                     'lon' => $lng,
                     'appid' => $this->apiKey,

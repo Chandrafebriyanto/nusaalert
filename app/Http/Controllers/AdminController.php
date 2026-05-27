@@ -62,23 +62,39 @@ class AdminController extends Controller
         return view('admin.index', $data);
     }
 
-    public function verifyLaporan(Request $request, Laporan $laporan)
+    public function verifyLaporan(Request $request, $id)
     {
+        $laporan = Laporan::findOrFail($id);
         $laporan->update(['status' => 'verified']);
         return $this->respondWithSuccessOrBack($request, 'Laporan berhasil diverifikasi.', ['laporan' => $laporan->fresh()]);
     }
 
-    public function rejectLaporan(Request $request, Laporan $laporan)
+    public function rejectLaporan(Request $request, $id)
     {
-        $laporan->delete();
-        return $this->respondWithSuccessOrBack($request, 'Laporan berhasil ditolak dan dihapus.');
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        abort_unless($user->hasRole('admin'), 403, 'Akses admin diperlukan.');
+
+        $laporan = Laporan::findOrFail($id);
+
+        try {
+            if($laporan->foto_url){
+                Storage::disk('public')->delete($laporan->foto_url);
+            }
+            $laporan->delete();
+            return $this->respondWithSuccessOrBack($request, 'Laporan berhasil ditolak dan dihapus.');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error rejecting laporan: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Gagal menolak laporan: terjadi kesalahan sistem.');
+        }
     }
 
-    public function updateRole(Request $request, User $user)
+    public function updateRole(Request $request, $id)
     {
+        $userModel = User::findOrFail($id);
         $request->validate(['role' => 'required|string|exists:roles,name']);
-        $user->syncRoles([$request->role]);
-        return $this->respondWithSuccessOrBack($request, "Role user {$user->name} diperbarui ke {$request->role}.", ['user' => $user->fresh()->load('roles')]);
+        $userModel->syncRoles([$request->role]);
+        return $this->respondWithSuccessOrBack($request, "Role user {$userModel->name} diperbarui ke {$request->role}.", ['user' => $userModel->fresh()->load('roles')]);
     }
 
     /**
@@ -157,25 +173,34 @@ class AdminController extends Controller
         return $this->respondWithSuccessOrRedirect($request, 'admin.index', $message, ['bencana' => $bencana, 'alert_count' => $alertCount], 201);
     }
 
-    public function destroyLaporan(Request $request, Laporan $laporan)
+    public function destroyLaporan(Request $request, $id)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         abort_unless($user->hasRole('admin'), 403, 'Akses admin diperlukan.');
 
-        if($laporan->foto_url){
-            Storage::disk('public')->delete($laporan->foto_url);
-        }
+        $laporan = Laporan::findOrFail($id);
 
-        $laporan->delete();
-        return $this->respondWithSuccessOrBack($request, 'Laporan Komunitas berhasil dihapus.');
+        try {
+            if($laporan->foto_url){
+                Storage::disk('public')->delete($laporan->foto_url);
+            }
+
+            $laporan->delete();
+            return $this->respondWithSuccessOrBack($request, 'Laporan Komunitas berhasil dihapus.');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error destroying laporan: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Gagal menghapus laporan: terjadi kesalahan sistem.');
+        }
     }
 
-    public function destroyBencana(Request $request, Bencana $bencana)
+    public function destroyBencana(Request $request, $id)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         abort_unless($user->hasRole('admin'), 403, 'Akses admin diperlukan.');
+
+        $bencana = Bencana::findOrFail($id);
 
         // Delete related alerts first to avoid foreign key constraint errors
         $bencana->alerts()->delete();

@@ -62,7 +62,7 @@
 
             try {
                 // VAPID public key from server
-                const vapidPublicKey = '{{ env("VAPID_PUBLIC_KEY") }}';
+                const vapidPublicKey = '{{ config("webpush.vapid.public_key") }}';
                 const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
                 const subscription = await registration.pushManager.subscribe({

@@ -83,13 +83,13 @@
 
             {{-- Map Picker --}}
             <div class="mb-4">
-                <label class="block font-sans font-bold text-sm text-on-surface mb-1">Koordinat — Klik peta untuk memilih <span class="text-error">*</span></label>
+                <label class="block font-sans font-bold text-sm text-on-surface mb-1">Koordinat — Klik peta atau masukkan manual <span class="text-error">*</span></label>
                 <div id="adminBencanaMap" class="w-full h-48 rounded-lg border border-outline-variant mb-2"></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <input name="latitude" id="admin_lat" type="number" step="any" required readonly placeholder="Latitude"
-                           class="rounded-lg w-full px-3 py-2 border border-outline-variant bg-surface-container text-on-surface text-sm focus:outline-none">
-                    <input name="longitude" id="admin_lng" type="number" step="any" required readonly placeholder="Longitude"
-                           class="rounded-lg w-full px-3 py-2 border border-outline-variant bg-surface-container text-on-surface text-sm focus:outline-none">
+                    <input name="latitude" id="admin_lat" type="number" step="any" required placeholder="Latitude"
+                           class="rounded-lg w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <input name="longitude" id="admin_lng" type="number" step="any" required placeholder="Longitude"
+                           class="rounded-lg w-full px-3 py-2 border border-outline-variant bg-surface text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary">
                 </div>
             </div>
 
@@ -167,7 +167,7 @@
         </div>
         
         {{-- Tombol Hapus Bencana --}}
-        @if($bencana->sumber_api === 'manual_admin')
+        @if($bencana->sumber_api === 'manual_admin' || $bencana->sumber_api === 'komunitas')
             <form action="{{ route('admin.bencana.destroy', $bencana->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus peringatan ini?')" class="shrink-0">
                 @csrf
                 @method('DELETE')

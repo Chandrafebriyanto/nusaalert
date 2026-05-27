@@ -47,8 +47,10 @@ class AlertController extends Controller
         return view('alerts.index', compact('alerts'));
     }
 
-    public function markAsRead(Request $request, Alert $alert)
+    public function markAsRead(Request $request, $id)
     {
+        $alert = Alert::findOrFail($id);
+
         if ($alert->user_id !== Auth::id()) {
             if ($this->wantsJson($request)) {
                 return response()->json(['status' => 'error', 'message' => 'Unauthorized.'], 403);

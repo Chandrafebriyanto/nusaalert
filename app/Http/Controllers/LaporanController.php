@@ -51,6 +51,7 @@ class LaporanController extends Controller
 
         $data = $request->only(['jenis_bencana', 'latitude', 'longitude', 'wilayah', 'deskripsi']);
         $data['user_id'] = Auth::id();
+        $data['status'] = 'pending';
 
         if ($request->hasFile('foto')) {
             $data['foto_url'] = $request->file('foto')->store('laporan', 'public');
