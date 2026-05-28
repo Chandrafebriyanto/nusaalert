@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -7,8 +7,8 @@
 
 @theme {
     /* Typography */
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-display: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
 
     /* NusaAlert Color System - Material Design 3 Inspired */
     --color-primary: #b71422;
@@ -67,14 +67,14 @@
 
     /* Alert Severity Colors */
     --color-alert-awas: #b71422;
-    --color-alert-siaga: #E57B18;
-    --color-alert-waspada: #E5C118;
+    --color-alert-siaga: #e57b18;
+    --color-alert-waspada: #e5c118;
     --color-alert-aman: #00685a;
 }
 
 /* Material Symbols */
 .material-symbols-outlined {
-    font-family: 'Material Symbols Outlined';
+    font-family: "Material Symbols Outlined";
     font-weight: normal;
     font-style: normal;
     font-size: 24px;
@@ -85,7 +85,8 @@
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    -webkit-font-feature-settings: 'liga';
+    font-feature-settings: "liga";
+    -webkit-font-feature-settings: "liga";
     -webkit-font-smoothing: antialiased;
 }
 
